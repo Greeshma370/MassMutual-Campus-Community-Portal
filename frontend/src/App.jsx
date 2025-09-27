@@ -8,6 +8,9 @@ import StudentDashboard from './pages/StudentDashboard.jsx';
 import FacultyDashboard from './pages/FacultyDashboard.jsx';
 import ManagementDashboard from './pages/ManagementDashboard.jsx';
 import StudentJobsAll from './pages/StudentJobsAll.jsx';
+import StudentProfile from './pages/StudentProfile.jsx';
+import StudentApplications from './pages/StudentApplications.jsx';
+import FacultyJobs from './pages/FacultyJobs.jsx';
 
 // Component Imports
 import RegisterStudent from './components/Registrations/registerStudent.jsx';
@@ -61,7 +64,19 @@ function App() {
           element={<ProtectedRoute><StudentJobsAll/></ProtectedRoute>} 
         />
         <Route 
+          path="/student/applications" 
+          element={<ProtectedRoute><StudentApplications/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/student/profile" 
+          element={<ProtectedRoute><StudentProfile/></ProtectedRoute>} 
+        />
+        <Route 
           path="/dashboard/faculty" 
+          element={<ProtectedRoute><FacultyDashboard /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/faculty/jobs" 
           element={<ProtectedRoute><FacultyDashboard /></ProtectedRoute>} 
         />
         <Route 

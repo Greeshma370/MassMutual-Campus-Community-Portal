@@ -1,14 +1,13 @@
 import React from 'react';
 import HeaderStudent from '../components/header/headerStudent';
-import News from '../components/News/news';
 import Footer from '../components/footer/Footer';
-import JobsList from '../components/Jobs/jobsList';
+import ApplicationsList from '../components/Application/applicationList';
 
-export default function StudentJobsAll() {
+export default function StudentApplications() {
   return (
     <div>
       <HeaderStudent />
-      <JobsList/>
+      <ApplicationsList/>
       <Footer />
     </div>
   );

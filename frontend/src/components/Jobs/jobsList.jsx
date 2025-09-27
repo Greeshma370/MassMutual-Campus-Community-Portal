@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getJobs } from '../../services/jobsAPI'; // Import the getJobs function
 import './jobsList.css'; // Import the CSS file
 
 const JobList = () => {
@@ -15,24 +16,7 @@ const JobList = () => {
       setLoading(true);
       setError(null);
       try {
-        // try to read token from localStorage (common keys)
-        const token = localStorage.getItem('token') || localStorage.getItem('authToken') || null;
-        const headers = { 'Content-Type': 'application/json' };
-        if (token) headers['Authorization'] = `Bearer ${token}`;
-
-        const res = await fetch('/api/jobs/all', {
-          method: 'GET',
-          headers,
-          signal: controller.signal,
-        });
-
-        if (!res.ok) {
-          // fallback to dummy data when server returns error or unauthenticated
-          throw new Error(`Fetch error: ${res.status}`);
-        }
-
-        const data = await res.json();
-        // accept either an array or {data: array}
+        const data = await getJobs(); // Use the getJobs function
         const jobsArray = Array.isArray(data) ? data : (data.data || data.jobs || []);
         setJobs(jobsArray);
       } catch (err) {

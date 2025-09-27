@@ -10,6 +10,7 @@ export default function HeaderFaculty() {
                 <ul>
                     <li>Home</li>
                     <li>Jobs</li>
+                    <li><Link to = "/faculty/jobs">Jobs</Link></li>
                     <li>Students</li>
                     <li>Profile</li>
                 </ul>

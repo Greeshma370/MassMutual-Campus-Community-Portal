@@ -9,11 +9,11 @@ export default function HeaderStudent() {
             <h1>Community Portal</h1>
             <nav>
                 <ul>
-                    <li>Home</li>
+                    <li><Link to = "/dashboard/student">Home</Link></li>
                     <li>Jobs For You</li>
                     <li><Link to = "/student/jobsall">All Jobs</Link></li>
-                    <li>Your Applications</li>
-                    <li>Profile</li>
+                    <li><Link to = "/student/applications">Your Applications</Link></li>
+                    <li><Link to = "/student/profile">Profile</Link></li>
                 </ul>
             </nav>
         </header>
