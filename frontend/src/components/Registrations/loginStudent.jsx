@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext.jsx';
 import { login as loginAPI } from '../../services/authAPI';
 import './loginStudent.css';
 
@@ -20,7 +20,7 @@ export default function LoginStudent() {
     e.preventDefault();
     try {
       const response = await loginAPI('student', formData);
-      login(response.data);
+      login(response.data); // Make sure to update the context!
       navigate('/dashboard/student');
     } catch (error) {
       console.error('Login failed:', error);
