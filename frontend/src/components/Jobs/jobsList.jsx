@@ -1,116 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import './jobsList.css'; // Import the CSS file
 
-const dummyJobs = [
-  {
-    _id: '1',
-    companyName: 'Tech Innovators Inc.',
-    title: 'Software Engineer Intern',
-    description: 'Join our dynamic team and contribute to cutting-edge software development projects. Gain hands-on experience with modern tech stacks.',
-    location: 'Bangalore',
-    salaryPackage: '5 LPA',
-    eligibility: {
-      minCGPA: 7.0,
-      requiredBranches: ['CSE', 'IT'],
-      maxBacklogs: 0,
-      requiredSkills: ['React', 'Node.js', 'MongoDB'],
-      yearSem: ['3rd Year, 6th Sem'],
-    },
-    last_date_to_apply: '2023-11-30T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f', // Dummy Faculty ID
-    isActive: true,
-    createdAt: '2023-10-15T10:00:00.000Z',
-  },
-  {
-    _id: '2',
-    companyName: 'Global Solutions Ltd.',
-    title: 'Data Analyst Trainee',
-    description: 'Work with large datasets, create reports, and help us make data-driven decisions. Opportunity to learn various analytical tools.',
-    location: 'Pune',
-    salaryPackage: '4.5 LPA',
-    eligibility: {
-      minCGPA: 6.5,
-      requiredBranches: ['CSE', 'IT', 'ECE'],
-      maxBacklogs: 1,
-      requiredSkills: ['Python', 'SQL', 'Excel'],
-      yearSem: ['4th Year, 7th Sem'],
-    },
-    last_date_to_apply: '2023-12-15T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f',
-    isActive: true,
-    createdAt: '2023-10-20T11:30:00.000Z',
-  },
-  {
-    _id: '3',
-    companyName: 'Creative Minds Agency',
-    title: 'UI/UX Designer Intern',
-    description: 'Design intuitive and engaging user interfaces for our web and mobile applications. Collaborate with product and development teams.',
-    location: 'Remote',
-    salaryPackage: 'Negotiable',
-    eligibility: {
-      minCGPA: 6.0,
-      requiredBranches: ['Any'],
-      maxBacklogs: 0,
-      requiredSkills: ['Figma', 'Adobe XD', 'Prototyping'],
-      yearSem: ['3rd Year, 5th Sem', '4th Year, 7th Sem'],
-    },
-    last_date_to_apply: '2023-11-25T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f',
-    isActive: true,
-    createdAt: '2023-10-18T09:00:00.000Z',
-  },
-  {
-    _id: '4',
-    companyName: 'Fintech Innovations',
-    title: 'Backend Developer',
-    description: 'Develop and maintain robust backend services for our financial applications. Strong focus on scalability and security.',
-    location: 'Hyderabad',
-    salaryPackage: '8 LPA',
-    eligibility: {
-      minCGPA: 7.5,
-      requiredBranches: ['CSE', 'IT'],
-      maxBacklogs: 0,
-      requiredSkills: ['Java', 'Spring Boot', 'REST APIs'],
-      yearSem: ['4th Year, 8th Sem'],
-    },
-    last_date_to_apply: '2023-12-05T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f',
-    isActive: true,
-    createdAt: '2023-10-22T14:00:00.000Z',
-  },
-  {
-    _id: '5',
-    companyName: 'HealthTech Solutions',
-    title: 'Mobile App Developer (Android)',
-    description: 'Build high-performance Android applications for the healthcare sector. Work with a passionate team of developers.',
-    location: 'Bangalore',
-    salaryPackage: '6 LPA',
-    eligibility: {
-      minCGPA: 6.8,
-      requiredBranches: ['CSE', 'ECE'],
-      maxBacklogs: 0,
-      requiredSkills: ['Kotlin', 'Android SDK', 'Firebase'],
-      yearSem: ['3rd Year, 6th Sem', '4th Year, 7th Sem'],
-    },
-    last_date_to_apply: '2023-12-01T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f',
-    isActive: true,
-    createdAt: '2023-10-16T16:00:00.000Z',
-  },
-];
-
 const JobList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('latest'); // 'latest', 'companyName', 'salary'
+  const [jobs, setJobs] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    let results = dummyJobs.filter(job =>
+    const controller = new AbortController();
+    const fetchJobs = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // try to read token from localStorage (common keys)
+        const token = localStorage.getItem('token') || localStorage.getItem('authToken') || null;
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const res = await fetch('/api/jobs/all', {
+          method: 'GET',
+          headers,
+          signal: controller.signal,
+        });
+
+        if (!res.ok) {
+          // fallback to dummy data when server returns error or unauthenticated
+          throw new Error(`Fetch error: ${res.status}`);
+        }
+
+        const data = await res.json();
+        // accept either an array or {data: array}
+        const jobsArray = Array.isArray(data) ? data : (data.data || data.jobs || []);
+        setJobs(jobsArray);
+      } catch (err) {
+        console.warn('Jobs fetch failed, using dummy data. Reason:', err.message);
+        setError(err.message);
+        setJobs(dummyJobs);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    let results = jobs.filter(job =>
       job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       job.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.eligibility.requiredSkills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()))
+      (job.location || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (job.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (job.eligibility?.requiredSkills || []).some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     // Filter by isActive
@@ -120,7 +64,6 @@ const JobList = () => {
     if (sortBy === 'companyName') {
       results.sort((a, b) => a.companyName.localeCompare(b.companyName));
     } else if (sortBy === 'salary') {
-      // Basic salary parsing for sorting, assuming "X LPA" format
       results.sort((a, b) => {
         const salaryA = parseFloat(a.salaryPackage);
         const salaryB = parseFloat(b.salaryPackage);
@@ -134,7 +77,7 @@ const JobList = () => {
     }
 
     setFilteredJobs(results);
-  }, [searchTerm, sortBy]);
+  }, [searchTerm, sortBy, jobs]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -166,6 +109,9 @@ const JobList = () => {
         </div>
       </div>
 
+      {loading && <p>Loading jobs...</p>}
+      {error && <p className="error-text">Error loading jobs ({error}). Showing local sample data.</p>}
+
       {filteredJobs.length === 0 ? (
         <p className="no-jobs-message">No jobs match your criteria.</p>
       ) : (
@@ -183,15 +129,15 @@ const JobList = () => {
               <div className="job-card-eligibility">
                 <strong>Eligibility:</strong>
                 <ul>
-                  {job.eligibility.minCGPA > 0 && <li>Min CGPA: {job.eligibility.minCGPA}</li>}
-                  {job.eligibility.requiredBranches.length > 0 && (
+                  {job.eligibility?.minCGPA > 0 && <li>Min CGPA: {job.eligibility.minCGPA}</li>}
+                  {job.eligibility?.requiredBranches?.length > 0 && (
                     <li>Branches: {job.eligibility.requiredBranches.join(', ')}</li>
                   )}
-                  {job.eligibility.maxBacklogs > 0 && <li>Max Backlogs: {job.eligibility.maxBacklogs}</li>}
-                  {job.eligibility.requiredSkills.length > 0 && (
+                  {job.eligibility?.maxBacklogs > 0 && <li>Max Backlogs: {job.eligibility.maxBacklogs}</li>}
+                  {job.eligibility?.requiredSkills?.length > 0 && (
                     <li>Skills: {job.eligibility.requiredSkills.join(', ')}</li>
                   )}
-                  {job.eligibility.yearSem.length > 0 && (
+                  {job.eligibility?.yearSem?.length > 0 && (
                     <li>Year/Sem: {job.eligibility.yearSem.join(', ')}</li>
                   )}
                 </ul>
@@ -199,7 +145,7 @@ const JobList = () => {
               <p className="job-card-deadline">
                 <span className="icon">📅</span> Apply by: {new Date(job.last_date_to_apply).toLocaleDateString()}
               </p>
-              <p className="job-card-description">{job.description.substring(0, 120)}...</p> {/* Truncate description */}
+              <p className="job-card-description">{(job.description || '').substring(0, 120)}...</p>
               <button className="job-card-button">View Details</button>
             </div>
           ))}

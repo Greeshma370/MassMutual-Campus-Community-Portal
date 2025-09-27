@@ -50,12 +50,12 @@ router.get("/", protect, async (req, res) => {
 
 // @route   GET /api/jobs/all (for faculty/management to see inactive jobs too)
 // @desc    Get all jobs including inactive ones
-// @access  Private (Faculty, Management)
 router.get("/all", protect, async (req, res) => {
   try {
-    const jobs = await Job.find().populate("postedBy", "name email department");
+    let jobs = await Job.find().populate("postedBy", "name email department");
     res.json(jobs);
   } catch (error) {
+    console.error("Error fetching all jobs:", error);
     res.status(500).json({ message: error.message });
   }
 });

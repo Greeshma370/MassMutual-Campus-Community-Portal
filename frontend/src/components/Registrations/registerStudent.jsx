@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./RegisterStudent.css";
 import { register } from "../../services/authAPI"; // Import the register function
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function RegisterStudent() {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -37,6 +38,7 @@ export default function RegisterStudent() {
     try {
       const response = await register('student', formData); // Call the API
       console.log("Registration successful:", response);
+      navigate('/login/student'); // Navigate to the login page after successful registration
       // You can add logic here to redirect the user or show a success message
     } catch (error) {
       console.error("Registration failed:", error);

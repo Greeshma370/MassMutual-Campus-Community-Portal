@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import { login as loginAPI } from '../../services/authAPI';
 import './loginStudent.css';
 
-export default function LoginStudent() {
+export default function LoginFaculty() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -21,12 +21,12 @@ export default function LoginStudent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await loginAPI('student', formData);
+      const response = await loginAPI('faculty', formData);
       
       // Call the login method from the context object
-      auth.login(response.data, 'student'); 
+      auth.login(response.data, 'faculty'); 
       
-      navigate('/dashboard/student');
+      navigate('/dashboard/faculty');
     } catch (error) {
       console.error('Login failed:', error);
     }

@@ -1,5 +1,6 @@
 import collegeLogo from "../../images/VCE-LOGO.png";
 import './header.css';
+import {Link} from "react-router-dom";
 
 export default function HeaderStudent() {
     return (
@@ -10,7 +11,7 @@ export default function HeaderStudent() {
                 <ul>
                     <li>Home</li>
                     <li>Jobs For You</li>
-                    <li>All Jobs</li>
+                    <li><Link to = "/student/jobsall">All Jobs</Link></li>
                     <li>Your Applications</li>
                     <li>Profile</li>
                 </ul>

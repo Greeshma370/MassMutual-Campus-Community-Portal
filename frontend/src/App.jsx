@@ -2,19 +2,35 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuth } from './context/AuthContext.jsx';
 
 // Page Imports
-import WelcomePage from './pages/WelcomePage.jsx'; 
+import WelcomePage from './pages/WelcomePage.jsx';
+import RoleSelectorPage from './pages/RoleSelectorPage.jsx';
 import StudentDashboard from './pages/StudentDashboard.jsx';
+import FacultyDashboard from './pages/FacultyDashboard.jsx';
+import ManagementDashboard from './pages/ManagementDashboard.jsx';
+import StudentJobsAll from './pages/StudentJobsAll.jsx';
 
 // Component Imports
 import RegisterStudent from './components/Registrations/registerStudent.jsx';
 import LoginStudent from './components/Registrations/loginStudent.jsx'; 
+import LoginFaculty from './components/Registrations/loginFaculty.jsx'; 
+import LoginManagement from './components/Registrations/loginManagement.jsx';
 
-// A simple component to protect routes
+// A component to protect routes
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
-  // Redirect to the login page if not authenticated
-  return isAuthenticated ? children : <Navigate to="/login/student" />;
+  return isAuthenticated ? children : <Navigate to="/login" />;
 }
+
+// A component to handle dashboard redirection
+function Dashboard() {
+  const { role } = useAuth();
+  if (role === 'student') return <Navigate to="/dashboard/student" />;
+  if (role === 'faculty') return <Navigate to="/dashboard/faculty" />;
+  if (role === 'management') return <Navigate to="/dashboard/management" />;
+  // Fallback if role is not set
+  return <Navigate to="/" />;
+}
+
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -24,19 +40,33 @@ function App() {
       <Routes>
         <Route 
           path="/" 
-          element={!isAuthenticated ? <WelcomePage /> : <Navigate to="/dashboard/student" />} 
+          element={!isAuthenticated ? <WelcomePage /> : <Dashboard />} 
         />
+        <Route path="/login" element={<RoleSelectorPage />} />
         <Route path="/register/student" element={<RegisterStudent />} />
         <Route path="/login/student" element={<LoginStudent />} />
+        <Route path="/login/faculty" element={<LoginFaculty />} />
+        <Route path="/login/management" element={<LoginManagement />} />
+        {/* You will need to create login pages for faculty and management */}
+        {/* <Route path="/login/faculty" element={<LoginFaculty />} /> */}
+        {/* <Route path="/login/management" element={<LoginManagement />} /> */}
         
-        {/* Protected Student Dashboard Route */}
+        {/* Protected Dashboard Routes */}
         <Route 
           path="/dashboard/student" 
-          element={
-            <ProtectedRoute>
-              <StudentDashboard />
-            </ProtectedRoute>
-          } 
+          element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/student/jobsall" 
+          element={<ProtectedRoute><StudentJobsAll/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/dashboard/faculty" 
+          element={<ProtectedRoute><FacultyDashboard /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/dashboard/management" 
+          element={<ProtectedRoute><ManagementDashboard /></ProtectedRoute>} 
         />
       </Routes>
     </Router>

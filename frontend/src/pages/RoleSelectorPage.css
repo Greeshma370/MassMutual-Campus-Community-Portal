@@ -1,0 +1,13 @@
+.role-selector-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.role-buttons {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
