@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./RegisterStudent.css";
+import { register } from "../../services/authAPI"; // Import the register function
 
 export default function RegisterStudent() {
   const [formData, setFormData] = useState({
@@ -19,7 +20,6 @@ export default function RegisterStudent() {
   const handleChange = (e) => {
     let { name, value } = e.target;
 
-    // Prevent CGPA > 10
     if (name === "cgpa") {
       if (value > 10) value = 10;
       if (value < 0) value = 0;
@@ -28,11 +28,16 @@ export default function RegisterStudent() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => { // Make the function async
     e.preventDefault();
-    console.log("Register Data:", formData);
-
-    // Later: send to backend API
+    try {
+      const response = await register('student', formData); // Call the API
+      console.log("Registration successful:", response);
+      // You can add logic here to redirect the user or show a success message
+    } catch (error) {
+      console.error("Registration failed:", error);
+      // Handle registration errors (e.g., display an error message)
+    }
   };
 
   return (
@@ -50,7 +55,7 @@ export default function RegisterStudent() {
         <input type="url" name="resume_url" placeholder="Resume URL" onChange={handleChange} required />
         <input type="text" name="skills" placeholder="Skills (comma separated)" onChange={handleChange} />
         <input type="text" name="interests" placeholder="Interests (comma separated)" onChange={handleChange} />
-        
+
         <button type="submit">Register </button>
       </form>
     </div>

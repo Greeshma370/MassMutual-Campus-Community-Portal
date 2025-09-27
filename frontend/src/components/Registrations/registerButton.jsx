@@ -1,4 +1,4 @@
-import './header.css';
+import '../header/header.css';
 export default function HeaderGuest() {
     return (
 <     div className="register-btn-container">
