@@ -6,6 +6,10 @@ import RegisterManagement from './components/Registrations/registerManagement';
 // ... other imports
 
 function App() {
+     useEffect(() => {
+    // Some logic here...
+    setData({ message: 'new data' }); 
+  }, []); // <-- Add the empty array to fix the loop!
   return (
     <Router>
       <Routes>
