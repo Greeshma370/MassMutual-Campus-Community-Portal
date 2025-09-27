@@ -1,9 +1,13 @@
-// services/jobsApi.js
-import API from "./api";
+import axios from 'axios';
 
-// 🔹 Jobs CRUD
-export const getJobs = () => API.get("/jobs");
-export const getJobById = (id) => API.get(`/jobs/${id}`);
-export const createJob = (data) => API.post("/jobs", data);
-export const updateJob = (id, data) => API.put(`/jobs/${id}`, data);
-export const deleteJob = (id) => API.delete(`/jobs/${id}`);
+const API_URL = 'http://localhost:5000/api/jobs'; // Your backend URL
+
+export const getJobs = async () => {
+  try {
+    const response = await axios.get(API_URL);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    throw error;
+  }
+};
