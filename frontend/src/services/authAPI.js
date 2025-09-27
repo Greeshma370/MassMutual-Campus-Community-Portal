@@ -1,9 +1,13 @@
 // services/authApi.js
 import API from "./api";
 
+export const register = (role, data) => {
+  // Construct the correct URL based on the role
+  const url = `/api/${role}s/register`; // e.g., /api/students/register
+  return API.post(url, data);
+};
 // 🔹 Auth endpoints
 export const login = (role, data) => API.post(`/${role}/login`, data);
-export const register = (role, data) => API.post(`/${role}/register`, data);
 
 // 🔹 Profile for logged-in user
 export const getProfile = () => API.get("/profile");
