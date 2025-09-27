@@ -1,0 +1,142 @@
+/* General styling for the page */
+body {
+  background-color: #f4f7f9;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main container for centering the profile card */
+.faculty-profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* The profile card component */
+.profile-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Text and details styling */
+.profile-name {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.profile-role {
+  font-size: 1em;
+  font-weight: 500;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 30px;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eef1f3;
+}
+
+.info-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-size: 0.9em;
+  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.info-value {
+  font-size: 1em;
+  color: #333;
+  word-break: break-all;
+}
+
+/* --- New Styles for Buttons --- */
+.profile-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  width: 100%;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.1s;
+  flex-grow: 1; /* Make buttons grow to fill space */
+  max-width: 45%;
+}
+
+.action-btn:active {
+  transform: translateY(1px);
+}
+
+.edit-btn {
+  background-color: #3498db; /* Primary blue */
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+.edit-btn:hover {
+  background-color: #2980b9;
+}
+
+.delete-btn {
+  background-color: #e74c3c; /* Danger red */
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 25px;
+  }
+  
+  .profile-name {
+    font-size: 1.6em;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .action-btn {
+      max-width: 100%;
+  }
+}

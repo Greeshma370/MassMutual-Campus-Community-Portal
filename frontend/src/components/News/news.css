@@ -1,0 +1,176 @@
+/* --- CONTAINER & HEADING --- */
+.news-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem;
+    text-align: center;
+}
+
+.news-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+/* --- ADD NEWS BUTTON STYLES --- */
+.register-btn-wrapper {
+    margin: 1rem 0 2rem;
+}
+
+.register-btn {
+    /* Combined CSS for Add News Button */
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: transform 0.2s, background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 auto; /* Center the button */
+}
+
+.register-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #0056b3, #003f7f);
+}
+
+/* --- NEWS LIST LAYOUT --- */
+.news-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* --- NEWS CARD STYLES (Viewing News) --- */
+.news-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    /* For positioning the dots button */
+    position: relative; 
+}
+
+.news-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.news-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Aligns title and tag at the top */
+}
+
+.news-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #222;
+    flex-grow: 1;
+    padding-right: 0.5rem;
+}
+
+.news-card p {
+    margin: 0.8rem 0;
+    color: #444;
+    flex-grow: 1; 
+}
+
+/* (Retained styles for .news-meta, .tag.news, .tag.event, .tag.drive) */
+.news-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem; /* Reduced margin */
+}
+
+.tag {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    flex-shrink: 0;
+}
+
+.tag.news { background: #e3f2fd; color: #1976d2; }
+.tag.event { background: #fff3e0; color: #e65100; }
+.tag.drive { background: #e8f5e9; color: #2e7d32; }
+
+
+/* --- NEW ACTION CONTROL STYLES --- */
+
+.action-control-area {
+    /* Contains the dots button and the action buttons */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 0.5rem;
+    border-top: 1px dashed #eee;
+}
+
+.dots-btn {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0 8px;
+    cursor: pointer;
+    transition: color 0.2s;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+}
+
+.dots-btn:hover {
+    color: #333;
+}
+
+.news-actions {
+    /* Container for Edit/Delete buttons */
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem; /* Space between dots and actions */
+}
+
+.action-btn {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, border-color 0.2s;
+    font-weight: 500;
+}
+
+.edit-btn {
+    background-color: #f0f4c3;
+    color: #558b2f;
+    border-color: #dce775;
+}
+
+.edit-btn:hover {
+    background-color: #dce775;
+}
+
+.delete-btn {
+    background-color: #ffebee;
+    color: #c62828;
+    border-color: #ef9a9a;
+}
+
+.delete-btn:hover {
+    background-color: #ef9a9a;
+}

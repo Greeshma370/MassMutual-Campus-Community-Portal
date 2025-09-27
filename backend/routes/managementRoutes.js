@@ -71,7 +71,7 @@ router.get("/:id", protect, authorizeRoles("management"), async (req, res) => {
 // @route   PUT /api/management/:id
 // @desc    Update management user profile (Management only, or user themselves)
 // @access  Private (Management)
-router.put("/:id", async (req, res) => {
+router.put("/:id",protect, authorizeRoles("management"), async (req, res) => {
   const { name } = req.body;
   try {
     let managementUser = await Management.findById(req.params.id);

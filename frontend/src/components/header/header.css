@@ -1,0 +1,82 @@
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* better alignment */
+    padding: 1rem 2rem;
+    background-color: #2d71e7;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky; /* stays on scroll */
+    top: 0;
+    left: 0;
+    right: 0; /* ensures full width */
+    width: 100%;
+    z-index: 1000;
+}
+
+header img {
+    height: 50px;
+    margin-right: 1rem;
+}
+
+header h1 {
+    color: #333;
+    font-size: 1.5rem;
+    margin: 0;
+    flex-grow: 1;
+}
+
+nav {
+    margin-left: auto;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 2rem;
+}
+
+nav li {
+    color: #666;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+nav li:hover {
+    color: #007bff;
+}
+
+nav a {
+    text-decoration: none;
+    color: inherit;
+}
+
+nav a:hover {
+    color: inherit;
+}
+
+.active {
+    color: #007bff;
+    font-weight: 600;
+}
+
+.register-btn-container {
+  margin-top: 0.5rem;
+}
+
+.register-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.register-btn:hover {
+  background-color: #0056b3;
+}

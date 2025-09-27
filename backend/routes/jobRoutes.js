@@ -35,9 +35,9 @@ router.get("/", protect, async (req, res) => {
         jobs = jobs.filter(job => {
             const { minCGPA, requiredBranches, maxBacklogs, yearSem } = job.eligibility;
             const meetsCGPA = student.cgpa >= minCGPA;
-            const meetsBranches = requiredBranches.length === 0 || requiredBranches.includes(student.branch);
+            const meetsBranches = requiredBranches.length === 0 || requiredBranches.includes(student.department);
             const meetsBacklogs = student.backlogs <= maxBacklogs;
-            const meetsYearSem = yearSem.length === 0 || yearSem.includes(student.year_sem);
+            const meetsYearSem = yearSem.length === 0 || yearSem.includes(student.yearSem);
             return meetsCGPA && meetsBranches && meetsBacklogs && meetsYearSem;
         });
     }
