@@ -2,8 +2,8 @@
 import API from "./api";
 
 export const register = (role, data) => {
-  // Construct the correct URL based on the role
-  const url = `/api/${role}s/register`; // e.g., /api/students/register
+  // Construct the correct URL based on the role, without the leading /api
+  const url = `/${role}s/register`; // e.g., /students/register
   return API.post(url, data);
 };
 // 🔹 Auth endpoints

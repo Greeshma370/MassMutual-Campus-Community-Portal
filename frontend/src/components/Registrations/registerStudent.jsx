@@ -3,6 +3,10 @@ import "./RegisterStudent.css";
 import { register } from "../../services/authAPI"; // Import the register function
 
 export default function RegisterStudent() {
+  const navigate = useNavigate(); // Initialize useNavigate
+  // ... (keep your existing useState and handleChange)
+
+  // Removed duplicate handleSubmit function
   const [formData, setFormData] = useState({
     name: "",
     email: "",
