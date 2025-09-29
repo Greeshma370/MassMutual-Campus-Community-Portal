@@ -45,7 +45,7 @@ export default function RegisterStudent() {
       // Handle registration errors (e.g., display an error message)
     }
   };
-
+  
   return (
     <div className="register-container">
       <h2> Student Registration</h2>

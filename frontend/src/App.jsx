@@ -11,6 +11,18 @@ import StudentJobsAll from './pages/StudentJobsAll.jsx';
 import StudentProfile from './pages/StudentProfile.jsx';
 import StudentApplications from './pages/StudentApplications.jsx';
 import FacultyJobs from './pages/FacultyJobs.jsx';
+import FacultyProfile from './pages/FacultyProfile.jsx';
+import ManagementJobs from './pages/ManagementJobs.jsx';
+import ManagementProfile from './pages/ManagementProfile.jsx';
+import RegisterFaculty from './pages/RegisterFaculty.jsx';
+import RegisterManagement from './pages/RegisterManagement.jsx';
+import ManagementApplications from './pages/ManagementApplications.jsx';
+import FacultyApplications from './pages/FacultyApplications.jsx';
+import FacultyStudents from './pages/FacultyStudent.jsx';
+import ManagementStudents from './pages/ManagementStudent.jsx';
+import ManagementFaculty from './pages/ManagementFaculty.jsx';
+import ManagementAll from './pages/ManagementAll.jsx';
+import JobsApply from './pages/JobsForyou.jsx';
 
 // Component Imports
 import RegisterStudent from './components/Registrations/registerStudent.jsx';
@@ -64,6 +76,10 @@ function App() {
           element={<ProtectedRoute><StudentJobsAll/></ProtectedRoute>} 
         />
         <Route 
+          path="/student/jobsforyou" 
+          element={<ProtectedRoute><JobsApply/></ProtectedRoute>} 
+        />
+        <Route 
           path="/student/applications" 
           element={<ProtectedRoute><StudentApplications/></ProtectedRoute>} 
         />
@@ -77,12 +93,58 @@ function App() {
         />
         <Route 
           path="/faculty/jobs" 
-          element={<ProtectedRoute><FacultyDashboard /></ProtectedRoute>} 
+          element={<ProtectedRoute><FacultyJobs /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/faculty/profile" 
+          element={<ProtectedRoute><FacultyProfile /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/faculty/applications" 
+          element={<ProtectedRoute><FacultyApplications /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/faculty/students" 
+          element={<ProtectedRoute><FacultyStudents /></ProtectedRoute>} 
         />
         <Route 
           path="/dashboard/management" 
           element={<ProtectedRoute><ManagementDashboard /></ProtectedRoute>} 
         />
+        <Route 
+          path="/management/jobs" 
+          element={<ProtectedRoute><ManagementJobs/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/management/registerfaculty" 
+          element={<ProtectedRoute><RegisterFaculty/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/management/registermanagement" 
+          element={<ProtectedRoute><RegisterManagement/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/management/applications" 
+          element={<ProtectedRoute><ManagementApplications/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/management/students" 
+          element={<ProtectedRoute><ManagementStudents/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/management/faculty" 
+          element={<ProtectedRoute><ManagementFaculty/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/management/all" 
+          element={<ProtectedRoute><ManagementAll/></ProtectedRoute>} 
+        />
+      
+        <Route 
+          path="/management/profile" 
+          element={<ProtectedRoute><ManagementProfile/></ProtectedRoute>} 
+        />
+        
       </Routes>
     </Router>
   );

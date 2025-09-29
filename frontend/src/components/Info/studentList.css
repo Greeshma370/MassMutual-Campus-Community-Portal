@@ -1,0 +1,71 @@
+.student-list-container {
+  padding: 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.student-list-title {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.student-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.student-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.student-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.student-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #222;
+}
+
+.student-email,
+.student-department,
+.student-year,
+.student-cgpa,
+.student-backlogs,
+.student-intern,
+.student-resume {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.student-resume a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.student-resume a:hover {
+  text-decoration: underline;
+}
+
+.student-skills,
+.student-interests {
+  margin-top: 10px;
+}
+
+.student-skills ul,
+.student-interests ul {
+  margin: 6px 0 0 16px;
+  font-size: 13px;
+  color: #444;
+}

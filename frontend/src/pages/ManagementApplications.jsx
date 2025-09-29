@@ -1,13 +1,13 @@
 import React from 'react';
 import HeaderManagement from '../components/header/headerManagement';
-import NewsUpdate from '../components/News/newsUpdate';
 import Footer from '../components/footer/Footer';
+import ApplicationsUpdate from '../components/Application/applicationUpdate';
 
-export default function ManagementDashboard() {
+export default function FacultyDashboard() {
   return (
     <div>
       <HeaderManagement />
-      <NewsUpdate/>
+      <ApplicationsUpdate/>
       <Footer />
     </div>
   );

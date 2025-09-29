@@ -312,3 +312,24 @@ body {
         justify-content: space-between;
     }
 }
+.apply-button {
+  background-color: #4caf50; /* Green */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin-left: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.apply-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.apply-button:active {
+  background-color: #3e8e41;
+  transform: translateY(0);
+}

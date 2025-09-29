@@ -10,7 +10,7 @@ export default function HeaderStudent() {
             <nav>
                 <ul>
                     <li><Link to = "/dashboard/student">Home</Link></li>
-                    <li>Jobs For You</li>
+                    <li><Link to ="/student/jobsforyou">Jobs For You</Link></li>
                     <li><Link to = "/student/jobsall">All Jobs</Link></li>
                     <li><Link to = "/student/applications">Your Applications</Link></li>
                     <li><Link to = "/student/profile">Profile</Link></li>
