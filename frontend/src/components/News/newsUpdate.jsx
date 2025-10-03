@@ -48,22 +48,13 @@ export default function News() {
     alert(`Functionality to edit item ${_id} will be implemented here.`);
   };
   
-  const handleAddNewsClick = () => {
-      console.log("Add News button clicked (Functionality to be added later)");
-  };
+  
 
   return (
     <div className="news-container">
       <h2>Announcements</h2>
 
-      <div className="register-btn-wrapper">
-        <button 
-          className="register-btn add-news-btn"
-          onClick={handleAddNewsClick}
-        >
-          ➕ Add New Announcement
-        </button>
-      </div>
+      
 
       <div className="news-list">
         {news.map((item) => (

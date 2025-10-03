@@ -34,7 +34,7 @@ export default function LoginFaculty() {
 
   return (
     <div className="login-container">
-      <h2>Student Login</h2>
+      <h2>Faculty Login</h2>
       <form onSubmit={handleSubmit} className="login-form">
         <input
           type="email"

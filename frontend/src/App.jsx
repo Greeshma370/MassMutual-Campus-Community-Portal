@@ -23,12 +23,15 @@ import ManagementStudents from './pages/ManagementStudent.jsx';
 import ManagementFaculty from './pages/ManagementFaculty.jsx';
 import ManagementAll from './pages/ManagementAll.jsx';
 import JobsApply from './pages/JobsForyou.jsx';
+import ManagementNewsForm from './pages/ManagementNewsForm.jsx';
+import FacultyNewsForm from './pages/FacultyNewsForm.jsx';
 
 // Component Imports
 import RegisterStudent from './components/Registrations/registerStudent.jsx';
 import LoginStudent from './components/Registrations/loginStudent.jsx'; 
 import LoginFaculty from './components/Registrations/loginFaculty.jsx'; 
 import LoginManagement from './components/Registrations/loginManagement.jsx';
+import ManagementNewsAdd from './pages/ManagementNewsForm.jsx';
 
 // A component to protect routes
 function ProtectedRoute({ children }) {
@@ -107,6 +110,11 @@ function App() {
           path="/faculty/students" 
           element={<ProtectedRoute><FacultyStudents /></ProtectedRoute>} 
         />
+        
+        <Route 
+          path="/faculty/news/add" 
+          element={<ProtectedRoute><FacultyNewsForm /></ProtectedRoute>} 
+        />
         <Route 
           path="/dashboard/management" 
           element={<ProtectedRoute><ManagementDashboard /></ProtectedRoute>} 
@@ -144,7 +152,10 @@ function App() {
           path="/management/profile" 
           element={<ProtectedRoute><ManagementProfile/></ProtectedRoute>} 
         />
-        
+        <Route 
+          path="/management/news/add" 
+          element={<ProtectedRoute><ManagementNewsForm/></ProtectedRoute>} 
+        />
       </Routes>
     </Router>
   );
