@@ -1,5 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './applicationUpdate.css'; 
+import { getApplications, updateApplication } from '../../services/applicationsAPI';
+import { useAuth } from '../../context/AuthContext';
 
 // --- DUMMY POPULATED DATA ---
 const dummyApplications = [
@@ -81,17 +83,33 @@ const dummyApplications = [
 ];
 
 const ApplicationListFaculty = () => {
-  const [applications, setApplications] = useState(dummyApplications);
+  const { isAuthenticated, role } = useAuth();
+  const [applications, setApplications] = useState([]);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Function to handle status change (simulates an API update)
-  const handleStatusChange = (appId, newStatus) => {
-    setApplications(prevApps =>
-      prevApps.map(app =>
-        app._id === appId ? { ...app, status: newStatus, updatedAt: new Date() } : app
-      )
-    );
+  // Function to handle status change and call server
+  const handleStatusChange = async (appId, newStatus) => {
+    try {
+      // optimistic update
+      setApplications(prev => prev.map(a => a._id === appId ? { ...a, status: newStatus, updatedAt: new Date() } : a));
+      await updateApplication(appId, { status: newStatus });
+    } catch (err) {
+      console.error('Failed to update application', err);
+      setError(err?.response?.data?.message || err?.message || 'Failed to update application');
+      // rollback on failure
+      // refetch or revert (simple approach: revert to server-data by refetching)
+      try {
+        const res = await getApplications();
+        const data = res?.data ?? res;
+        const appsArray = Array.isArray(data) ? data : (data.data || data.applications || []);
+        setApplications(appsArray.length ? appsArray : dummyApplications);
+      } catch (e) {
+        console.error('Failed to reload applications after update failure', e);
+      }
+    }
   };
 
   // Function to handle sorting logic
@@ -129,6 +147,29 @@ const ApplicationListFaculty = () => {
     return sortableApps;
   }, [applications, sortKey, sortOrder]);
 
+  // Fetch applications for faculty/management on mount
+  useEffect(() => {
+    const fetchApps = async () => {
+      if (!isAuthenticated || !(role === 'faculty' || role === 'management')) return;
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await getApplications();
+        const data = res?.data ?? res;
+        const appsArray = Array.isArray(data) ? data : (data.data || data.applications || []);
+        setApplications(appsArray.length ? appsArray : []);
+      } catch (err) {
+        console.error('Failed to fetch applications', err);
+        setError(err?.response?.data?.message || err?.message || 'Failed to load applications');
+        setApplications(dummyApplications); // fallback for dev
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApps();
+  }, [isAuthenticated, role]);
+
   return (
     <div className="applications-list-container">
       <h2 className="applications-title">Faculty Portal: Student Applications</h2>
@@ -152,7 +193,10 @@ const ApplicationListFaculty = () => {
         </button>
       </div>
 
-      {applications.length === 0 ? (
+      {loading && <p>Loading applications...</p>}
+      {error && <p className="error-text">Error: {error}</p>}
+
+      {(!loading && applications.length === 0) ? (
         <p className="no-applications-message">No applications found.</p>
       ) : (
         <div className="application-cards-grid">
@@ -160,9 +204,9 @@ const ApplicationListFaculty = () => {
             <div key={app._id} className={`application-card status-${app.status}`}>
               <div className="card-header">
                 <div className="student-info">
-                    <strong>Student:</strong> {app.studentId.name} ({app.studentId.rollNo})
+                    <strong>Student:</strong> {app.studentId?.name || app.studentId.name} ({app.studentId?.rollNo || app.studentId.rollNo})
                     <br />
-                    <strong>Dept:</strong> {app.studentId.department}
+                    <strong>Dept:</strong> {app.studentId?.department || app.studentId.department}
                 </div>
                 <div className="status-selector-container">
                     {/* Status Dropdown: Faculty can change the status */}
@@ -175,22 +219,21 @@ const ApplicationListFaculty = () => {
                         <option value="shortlisted">Shortlisted</option>
                         <option value="accepted">Accepted</option>
                         <option value="rejected">Rejected</option>
-                        <option value="withdrawn">Withdrawn</option>
                     </select>
                 </div>
               </div>
               
-              <h3 className="job-title">{app.jobId.title}</h3>
-              <p className="job-company">{app.jobId.companyName}</p>
+              <h3 className="job-title">{app.jobId?.title || app.jobId.title}</h3>
+              <p className="job-company">{app.jobId?.companyName || app.jobId.companyName}</p>
 
               <div className="meta-info">
-                <span>📍 {app.jobId.location}</span>
-                <span>💰 {app.jobId.salaryPackage}</span>
+                <span>📍 {app.jobId?.location || app.jobId.location}</span>
+                <span>💰 {app.jobId?.salaryPackage || app.jobId.salaryPackage}</span>
               </div>
               
               <div className="dates-info">
-                <span>Applied: {app.appliedDate.toLocaleDateString()}</span>
-                <span>Last Update: {app.updatedAt.toLocaleDateString()}</span>
+                <span>Applied: {new Date(app.appliedDate).toLocaleDateString()}</span>
+                <span>Last Update: {new Date(app.updatedAt).toLocaleDateString()}</span>
               </div>
               
               <div className="faculty-notes">

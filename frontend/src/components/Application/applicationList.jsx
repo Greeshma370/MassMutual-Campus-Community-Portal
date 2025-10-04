@@ -1,74 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './applicationList.css'; 
-
-// --- DUMMY POPULATED DATA ---
-const dummyApplications = [
-  {
-    _id: 'app1',
-    studentId: { name: 'Alice Smith', rollNo: 'S19001' },
-    jobId: {
-      _id: 'job1',
-      title: 'Full Stack Developer Intern',
-      companyName: 'NexGen Tech',
-      location: 'Hyderabad',
-      salaryPackage: '6 LPA',
-    },
-    status: 'shortlisted',
-    facultyNotes: 'Excellent CGPA and good project work.',
-    appliedDate: new Date('2024-09-10T10:00:00.000Z'),
-    updatedAt: new Date('2024-09-25T14:30:00.000Z'),
-  },
-  {
-    _id: 'app2',
-    studentId: { name: 'Bob Johnson', rollNo: 'S19002' },
-    jobId: {
-      _id: 'job2',
-      title: 'Data Analyst Trainee',
-      companyName: 'Global Insights',
-      location: 'Bangalore',
-      salaryPackage: '4.5 LPA',
-    },
-    status: 'pending',
-    facultyNotes: '',
-    appliedDate: new Date('2024-09-12T11:00:00.000Z'),
-    updatedAt: new Date('2024-09-12T11:00:00.000Z'),
-  },
-  {
-    _id: 'app3',
-    studentId: { name: 'Charlie Brown', rollNo: 'S19003' },
-    jobId: {
-      _id: 'job3',
-      title: 'Cloud Engineer',
-      companyName: 'CloudSphere Solutions',
-      location: 'Remote',
-      salaryPackage: '10 LPA',
-    },
-    status: 'rejected',
-    facultyNotes: 'Missed minimum CGPA requirement (7.5 needed, student has 7.0).',
-    appliedDate: new Date('2024-09-05T09:00:00.000Z'),
-    updatedAt: new Date('2024-09-15T10:00:00.000Z'),
-  },
-  {
-    _id: 'app4',
-    studentId: { name: 'Dana Scully', rollNo: 'S19004' },
-    jobId: {
-      _id: 'job1',
-      title: 'Full Stack Developer Intern',
-      companyName: 'NexGen Tech',
-      location: 'Hyderabad',
-      salaryPackage: '6 LPA',
-    },
-    status: 'accepted',
-    facultyNotes: 'Final selection confirmed by HR.',
-    appliedDate: new Date('2024-09-11T12:00:00.000Z'),
-    updatedAt: new Date('2024-09-28T16:00:00.000Z'),
-  },
-];
-
+import { getApplications } from '../../services/applicationsAPI';
+import { useAuth } from '../../context/AuthContext';
 
 const ApplicationList = () => {
-  // Use state to manage applications (useful if the student can withdraw)
-  const [applications, setApplications] = useState(dummyApplications);
+  const { isAuthenticated, role } = useAuth();
+  // Use state to manage applications (fetched from server)
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchApps = async () => {
+      if (!isAuthenticated) return;
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await getApplications();
+        // res may be axios response -> data is in res.data
+        const data = res?.data ?? res;
+        const appsArray = Array.isArray(data) ? data : (data.data || data.applications || []);
+        if (mounted) setApplications(appsArray);
+      } catch (err) {
+        console.error('Failed to load applications', err);
+        if (mounted) setError(err?.response?.data?.message || err?.message || 'Failed to load applications');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchApps();
+    return () => { mounted = false; };
+  }, [isAuthenticated]);
 
   const getStatusText = (status) => {
     switch (status) {
@@ -88,23 +52,33 @@ const ApplicationList = () => {
   };
 
   const handleWithdraw = (_id) => {
-    if (window.confirm("Are you sure you want to withdraw this application?")) {
-      setApplications(applications.map(app => 
-        app._id === _id ? { ...app, status: 'withdrawn', updatedAt: new Date() } : app
-      ));
-      console.log(`Application ${_id} withdrawn.`);
-    }
+    // Withdraw option removed - handled server-side by faculty/management if needed
   };
+
+  // use server data directly
+  const displayApps = applications;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="applications-list-container">
+        <h2 className="applications-title">Your Job Applications</h2>
+        <p className="no-applications-message">Please log in as a student to view your applications.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="applications-list-container">
       <h2 className="applications-title">Your Job Applications</h2>
 
-      {applications.length === 0 ? (
+      {loading && <p>Loading applications...</p>}
+      {error && <p className="error-text">Error: {error}</p>}
+
+      {(!loading && displayApps.length === 0) ? (
         <p className="no-applications-message">You have not applied for any jobs yet.</p>
       ) : (
         <div className="application-cards-grid">
-          {applications.map((app) => (
+          {displayApps.map((app) => (
             <div key={app._id} className={`application-card status-${app.status}`}>
               <div className="card-header">
                 {/* As this is a student view, we only show the status */}
@@ -113,17 +87,17 @@ const ApplicationList = () => {
                 </div>
               </div>
               
-              <h3 className="job-title">{app.jobId.title}</h3>
-              <p className="job-company">{app.jobId.companyName}</p>
+              <h3 className="job-title">{app.jobId?.title || app.jobId.title}</h3>
+              <p className="job-company">{app.jobId?.companyName || app.jobId.companyName}</p>
 
               <div className="meta-info">
-                <span>📍 {app.jobId.location}</span>
-                <span>💰 {app.jobId.salaryPackage}</span>
+                <span>📍 {app.jobId?.location || app.jobId.location}</span>
+                <span>💰 {app.jobId?.salaryPackage || app.jobId.salaryPackage}</span>
               </div>
               
               <div className="dates-info">
-                <span>Applied: {app.appliedDate.toLocaleDateString()}</span>
-                <span>Last Update: {app.updatedAt.toLocaleDateString()}</span>
+                <span>Applied: {new Date(app.appliedDate).toLocaleDateString()}</span>
+                <span>Last Update: {new Date(app.updatedAt).toLocaleDateString()}</span>
               </div>
               
               {/* Display Faculty Notes only if available for the student */}
@@ -133,15 +107,7 @@ const ApplicationList = () => {
                 </div>
               )}
 
-              {/* Action Button for Student */}
-              {app.status === 'pending' && (
-                <button 
-                  className="withdraw-btn" 
-                  onClick={() => handleWithdraw(app._id)}
-                >
-                  Withdraw Application
-                </button>
-              )}
+              {/* Withdraw option removed for students */}
             </div>
           ))}
         </div>

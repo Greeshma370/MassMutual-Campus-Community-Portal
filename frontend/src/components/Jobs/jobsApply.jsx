@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getJobs } from '../../services/jobsAPI'; // Import the getJobs function
+import { applyJob } from '../../services/applicationsAPI';
 import './jobsList.css'; // Import the CSS file
 
 const JobList = () => {
@@ -9,27 +10,41 @@ const JobList = () => {
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [applyingJobIds, setApplyingJobIds] = useState([]); // ids currently being applied to
+  const [appliedJobIds, setAppliedJobIds] = useState([]); // ids successfully applied
 
   useEffect(() => {
     const controller = new AbortController();
+    let mounted = true; // prevent state updates after unmount
+
     const fetchJobs = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getJobs(); // Use the getJobs function
+        // Call getJobs() without passing undefined args. jobsAPI will handle auth headers.
+        const data = await getJobs();
+
+        // API might return array or object containing data/jobs
         const jobsArray = Array.isArray(data) ? data : (data.data || data.jobs || []);
-        setJobs(jobsArray);
+
+        if (mounted) setJobs(jobsArray);
       } catch (err) {
-        console.warn('Jobs fetch failed, using dummy data. Reason:', err.message);
-        setError(err.message);
-        setJobs(dummyJobs);
+        console.warn('Jobs fetch failed, using dummy data. Reason:', err?.message || err);
+        if (mounted) {
+          setError(err?.message || String(err));
+          // keep jobs as empty array (or set to local dummy if you have one)
+        }
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
     fetchJobs();
-    return () => controller.abort();
+
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
   }, []);
 
   useEffect(() => {
@@ -134,7 +149,26 @@ const JobList = () => {
               {/* Action Buttons */}
               <div className="job-card-actions">
                 <button className="job-card-button">View Details</button>
-                <button className="apply-button">Apply</button>
+                <button
+                  className="apply-button"
+                  onClick={async () => {
+                    // prevent double clicks
+                    if (applyingJobIds.includes(job._id) || appliedJobIds.includes(job._id)) return;
+                    setApplyingJobIds(prev => [...prev, job._id]);
+                    try {
+                      await applyJob({ jobId: job._id });
+                      setAppliedJobIds(prev => [...prev, job._id]);
+                    } catch (err) {
+                      console.error('Apply failed', err);
+                      alert(err?.response?.data?.message || err?.message || 'Failed to apply');
+                    } finally {
+                      setApplyingJobIds(prev => prev.filter(id => id !== job._id));
+                    }
+                  }}
+                  disabled={applyingJobIds.includes(job._id) || appliedJobIds.includes(job._id)}
+                >
+                  {applyingJobIds.includes(job._id) ? 'Applying...' : (appliedJobIds.includes(job._id) ? 'Applied' : 'Apply')}
+                </button>
               </div>
             </div>
           ))}

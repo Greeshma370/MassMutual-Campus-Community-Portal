@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './registerFaculty.css';
+import API from '../../services/api';
 
 const FacultyRegistration = () => {
   const [formData, setFormData] = useState({
@@ -44,7 +45,7 @@ const FacultyRegistration = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
@@ -52,8 +53,7 @@ const FacultyRegistration = () => {
     if (Object.keys(validationErrors).length === 0) {
       setIsSubmitting(true);
       setMessage('');
-      
-      // *** Mock API Call Simulation ***
+
       const payload = {
         name: formData.name,
         email: formData.email,
@@ -62,14 +62,27 @@ const FacultyRegistration = () => {
         role: 'faculty', // Fixed role as per schema
       };
 
-      console.log('Attempting to register new Faculty user with payload:', payload);
+      try {
+        console.log('Posting faculty payload to /api/faculty', payload);
+        const res = await API.post('/faculty', payload);
 
-      setTimeout(() => {
+        // Backend returns { success: true, data: faculty } on success
+        if (res?.data?.success) {
+          setMessage('✅ Faculty user registered successfully!');
+          setFormData({ name: '', email: '', password: '', confirmPassword: '', department: '' });
+          setErrors({});
+        } else {
+          // Backend may return success=false or a generic response
+          const serverMsg = res?.data?.message || 'Registration failed';
+          setMessage(serverMsg);
+        }
+      } catch (err) {
+        console.error('Error registering faculty:', err);
+        const serverMsg = err?.response?.data?.message || err.message || 'Server error';
+        setMessage(serverMsg);
+      } finally {
         setIsSubmitting(false);
-        // Simulate successful registration
-        setMessage('✅ Faculty user registered successfully!');
-        setFormData({ name: '', email: '', password: '', confirmPassword: '', department: '' }); // Clear form
-      }, 2000); 
+      }
     } else {
       setMessage('Please correct the errors and try again.');
     }

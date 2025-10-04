@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getJobs } from '../../services/jobsAPI'; // Import the getJobs function
+import { getAllJobs } from '../../services/jobsAPI'; // Import the getAllJobs function
 import './jobsList.css'; // Import the CSS file
 
 const JobList = () => {
@@ -12,24 +12,29 @@ const JobList = () => {
 
   useEffect(() => {
     const controller = new AbortController();
+    let mounted = true;
+
     const fetchJobs = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getJobs(); // Use the getJobs function
+        const data = await getAllJobs(); // fetch all jobs (including inactive)
         const jobsArray = Array.isArray(data) ? data : (data.data || data.jobs || []);
-        setJobs(jobsArray);
+        if (mounted) setJobs(jobsArray);
       } catch (err) {
-        console.warn('Jobs fetch failed, using dummy data. Reason:', err.message);
-        setError(err.message);
-        setJobs(dummyJobs);
+        console.warn('Jobs fetch failed. Reason:', err?.message || err);
+        if (mounted) setError(err?.message || String(err));
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
     fetchJobs();
-    return () => controller.abort();
+
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
   }, []);
 
   useEffect(() => {

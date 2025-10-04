@@ -1,23 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createJob } from '../../services/jobsAPI';
 import "./jobsForm.css";
+import { useAuth } from "../../context/AuthContext";
+
+const initialForm = {
+  companyName: "",
+  title: "",
+  description: "",
+  location: "",
+  salaryPackage: "",
+  minCGPA: "",
+  requiredBranches: "",
+  maxBacklogs: "",
+  requiredSkills: "",
+  yearSem: "",
+  last_date_to_apply: "",
+  isActive: true,
+};
 
 export default function JobForm() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    companyName: "",
-    title: "",
-    description: "",
-    location: "",
-    salaryPackage: "",
-    minCGPA: "",
-    requiredBranches: "",
-    maxBacklogs: "",
-    requiredSkills: "",
-    yearSem: "",
-    last_date_to_apply: "",
-    isActive: true,
-  });
+  const Auth=useAuth()
+  const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -56,27 +61,19 @@ export default function JobForm() {
 
     setLoading(true);
     try {
-      const token = localStorage.getItem("token") || localStorage.getItem("authToken");
-      const res = await fetch("/api/jobs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        throw new Error(body?.message || `Server responded ${res.status}`);
-      }
-
-      const data = await res.json();
+      const data = await createJob(payload);
       setSuccess("Job posted successfully.");
       // optional: navigate to jobs list or dashboard
-      navigate("/dashboard/faculty");
+      if (Auth.role=='faculty'){
+        navigate("/dashboard/faculty")
+      }
+      else{
+        navigate("/dashboard/management")
+      }
     } catch (err) {
-      setError(err.message || "Failed to post job.");
+      // axios error handling: err.response.data.message or err.message
+      const msg = err?.response?.data?.message || err?.message || 'Failed to post job.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -154,24 +151,7 @@ export default function JobForm() {
         <button className="btn primary" type="submit" disabled={loading}>
           {loading ? "Posting..." : "Post Job"}
         </button>
-        <button
-          type="button"
-          className="btn outline"
-          onClick={() => setForm({
-            companyName: "",
-            title: "",
-            description: "",
-            location: "",
-            salaryPackage: "",
-            minCGPA: "",
-            requiredBranches: "",
-            maxBacklogs: "",
-            requiredSkills: "",
-            yearSem: "",
-            last_date_to_apply: "",
-            isActive: true,
-          })}
-        >
+        <button type="button" className="btn outline" onClick={() => setForm(initialForm)}>
           Reset
         </button>
       </div>

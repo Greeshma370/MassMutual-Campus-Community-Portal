@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./studentList.css";
+import { getAllStudents } from '../../services/authAPI';
 
 const StudentList = () => {
   // Dummy student data
@@ -51,8 +52,28 @@ const StudentList = () => {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    // Later: replace with API call
-    setStudents(dummyStudents);
+    let mounted = true;
+    const controller = new AbortController();
+
+    const fetchStudents = async () => {
+      try {
+        const res = await getAllStudents();
+        const data = res?.data ?? res;
+        const studentsArray = Array.isArray(data) ? data : (data.data || data.students || []);
+        if (mounted && studentsArray.length > 0) setStudents(studentsArray);
+        else if (mounted) setStudents(dummyStudents); // fallback for dev
+      } catch (err) {
+        console.error('Failed to fetch students', err);
+        if (mounted) setStudents(dummyStudents);
+      }
+    };
+
+    fetchStudents();
+
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
   }, []);
 
   return (

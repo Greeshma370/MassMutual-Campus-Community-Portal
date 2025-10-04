@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './registerManagement.css';
+import API from '../../services/api';
 
 const ManagementRegistration = () => {
   const [formData, setFormData] = useState({
@@ -39,7 +40,7 @@ const ManagementRegistration = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
@@ -47,8 +48,7 @@ const ManagementRegistration = () => {
     if (Object.keys(validationErrors).length === 0) {
       setIsSubmitting(true);
       setMessage('');
-      
-      // *** Mock API Call Simulation ***
+
       const payload = {
         name: formData.name,
         email: formData.email,
@@ -56,15 +56,25 @@ const ManagementRegistration = () => {
         role: 'management', // Fixed role as per schema
       };
 
-      console.log('Attempting to register new Management user with payload:', payload);
+      try {
+        console.log('Posting management payload to /api/management', payload);
+        const res = await API.post('/management', payload);
 
-      setTimeout(() => {
+        if (res?.data?.success) {
+          setMessage('✅ Management user registered successfully!');
+          setFormData({ name: '', email: '', password: '', confirmPassword: '' });
+          setErrors({});
+        } else {
+          const serverMsg = res?.data?.message || 'Registration failed';
+          setMessage(serverMsg);
+        }
+      } catch (err) {
+        console.error('Error registering management user:', err);
+        const serverMsg = err?.response?.data?.message || err.message || 'Server error';
+        setMessage(serverMsg);
+      } finally {
         setIsSubmitting(false);
-        // Simulate successful registration
-        setMessage('✅ Management user registered successfully!');
-        setFormData({ name: '', email: '', password: '', confirmPassword: '' }); // Clear form
-        // In a real app, you would redirect here
-      }, 2000); 
+      }
     } else {
       setMessage('Please correct the errors and try again.');
     }

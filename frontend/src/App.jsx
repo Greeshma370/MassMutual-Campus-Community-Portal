@@ -25,7 +25,7 @@ import ManagementAll from './pages/ManagementAll.jsx';
 import JobsApply from './pages/JobsForyou.jsx';
 import ManagementNewsForm from './pages/ManagementNewsForm.jsx';
 import FacultyNewsForm from './pages/FacultyNewsForm.jsx';
-
+import JobsForm from './pages/JobsForm.jsx';
 // Component Imports
 import RegisterStudent from './components/Registrations/registerStudent.jsx';
 import LoginStudent from './components/Registrations/loginStudent.jsx'; 
@@ -155,6 +155,10 @@ function App() {
         <Route 
           path="/management/news/add" 
           element={<ProtectedRoute><ManagementNewsForm/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/jobs/add" 
+          element={<ProtectedRoute><JobsForm/></ProtectedRoute>} 
         />
       </Routes>
     </Router>

@@ -7,6 +7,9 @@ export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState(null); // Add role state
 
   const login = (userData, userRole) => {
+    if (userData.token){
+      localStorage.setItem("token",userData.token)
+    }
     setUser(userData);
     setRole(userRole); // Set the role on login
   };
@@ -15,6 +18,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setRole(null); // Clear the role on logout
   };
+
 
   const isAuthenticated = user !== null;
 

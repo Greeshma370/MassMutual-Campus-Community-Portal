@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./facultyList.css";
+import { getAllFaculty } from '../../services/authAPI';
 
 const FacultyList = () => {
   // Dummy faculty data
@@ -30,8 +31,28 @@ const FacultyList = () => {
   const [faculty, setFaculty] = useState([]);
 
   useEffect(() => {
-    // In real case: fetch from backend
-    setFaculty(dummyFaculty);
+    let mounted = true;
+    const controller = new AbortController();
+
+    const fetchFaculty = async () => {
+      try {
+        const res = await getAllFaculty();
+        const data = res?.data ?? res;
+        const facultyArray = Array.isArray(data) ? data : (data.data || data.faculty || []);
+        if (mounted && facultyArray.length > 0) setFaculty(facultyArray);
+        else if (mounted) setFaculty(dummyFaculty);
+      } catch (err) {
+        console.error('Failed to fetch faculty', err);
+        if (mounted) setFaculty(dummyFaculty);
+      }
+    };
+
+    fetchFaculty();
+
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
   }, []);
 
   return (

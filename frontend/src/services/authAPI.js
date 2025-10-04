@@ -18,6 +18,11 @@ export const getAllStudents = () => API.get("/students");
 export const getStudentById = (id) => API.get(`/students/${id}`);
 export const deleteStudent = (id) => API.delete(`/students/${id}`);
 
+// 🔹 Faculty management
+export const getAllFaculty = () => API.get("/faculty");
+export const getFacultyById = (id) => API.get(`/faculty/${id}`);
+export const deleteFaculty = (id) => API.delete(`/faculty/${id}`);
+
 export const getAllManagement = () => API.get("/management");
 export const getManagementById = (id) => API.get(`/management/${id}`);
 export const deleteManagement = (id) => API.delete(`/management/${id}`);

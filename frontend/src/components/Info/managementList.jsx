@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from "react";
 import "./managementList.css";
+import { getAllManagement } from '../../services/authAPI';
 
 const ManagementList = () => {
-  // Dummy management data
-  const dummyManagement = [
-    {
-      _id: "1",
-      name: "Mr. Rajesh Kumar",
-      email: "rajesh.kumar@university.edu",
-      role: "management",
-    },
-    {
-      _id: "2",
-      name: "Mrs. Anita Sharma",
-      email: "anita.sharma@university.edu",
-      role: "management",
-    },
-    {
-      _id: "3",
-      name: "Dr. Suresh Mehta",
-      email: "suresh.mehta@university.edu",
-      role: "management",
-    },
-  ];
-
   const [management, setManagement] = useState([]);
 
   useEffect(() => {
-    // In real case: fetch from backend API
-    setManagement(dummyManagement);
+    let mounted = true;
+    const controller = new AbortController();
+
+    const fetchManagement = async () => {
+      try {
+        const res = await getAllManagement();
+        const data = res?.data ?? res;
+        const mgmtArray = Array.isArray(data) ? data : (data.data || data.management || []);
+        if (mounted && mgmtArray.length > 0) setManagement(mgmtArray);
+        else if (mounted) setManagement([]);
+      } catch (err) {
+        console.error('Failed to fetch management', err);
+        if (mounted) setManagement([]);
+      }
+    };
+
+    fetchManagement();
+
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
   }, []);
 
   return (
@@ -48,3 +47,4 @@ const ManagementList = () => {
 };
 
 export default ManagementList;
+

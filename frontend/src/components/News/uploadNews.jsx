@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./uploadNews.css";
+import { createNews } from "../../services/newsAPI";
+import { useAuth } from "../../context/AuthContext";
 
 export default function NewsForm() {
   const navigate = useNavigate();
+  const Auth=useAuth()
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("news");
@@ -32,22 +35,9 @@ export default function NewsForm() {
 
     setLoading(true);
     try {
-      const token = localStorage.getItem("token") || localStorage.getItem("authToken");
-      const res = await fetch("/api/news", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify(payload),
-      });
+      const res=createNews(payload)
+      console.log(res)
 
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => null);
-        throw new Error(errBody?.message || `Server error ${res.status}`);
-      }
-
-      const data = await res.json();
       setSuccess("Posted successfully.");
       setTitle("");
       setDescription("");
@@ -55,6 +45,12 @@ export default function NewsForm() {
       setEventDate("");
       // navigate back to a dashboard or list if desired:
       // navigate("/dashboard/faculty");
+      if (Auth.role=='faculty'){
+        navigate("/dashboard/faculty")
+      }
+      else{
+        navigate("/dashboard/management")
+      }
     } catch (err) {
       setError(err.message || "Failed to post news/event.");
     } finally {

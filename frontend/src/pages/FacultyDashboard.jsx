@@ -1,5 +1,5 @@
 import React from 'react';
-import HeaderManagement from '../components/header/headerManagement.jsx';
+import HeaderFaculty from '../components/header/headerFaculty';
 import NewsUpdate from '../components/News/newsUpdate.jsx';
 import Footer from '../components/footer/Footer.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ export default function ManagementDashboard() {
 
   return (
     <div>
-      <HeaderManagement />
+      <HeaderFaculty />
       <div className="register-btn-wrapper">
         <button 
           className="register-btn add-news-btn"

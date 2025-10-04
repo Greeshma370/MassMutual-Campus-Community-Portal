@@ -1,142 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import './jobsList.css'; // Import the CSS file
-
-const initialJobsData = [
-  {
-    _id: '1',
-    companyName: 'Tech Innovators Inc.',
-    title: 'Software Engineer Intern',
-    description: 'Join our dynamic team and contribute to cutting-edge software development projects. Gain hands-on experience with modern tech stacks.',
-    location: 'Bangalore',
-    salaryPackage: '5 LPA',
-    eligibility: {
-      minCGPA: 7.0,
-      requiredBranches: ['CSE', 'IT'],
-      maxBacklogs: 0,
-      requiredSkills: ['React', 'Node.js', 'MongoDB'],
-      yearSem: ['3rd Year, 6th Sem'],
-    },
-    last_date_to_apply: '2023-11-30T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f', // Dummy Faculty ID
-    isActive: true,
-    createdAt: '2023-10-15T10:00:00.000Z',
-  },
-  {
-    _id: '2',
-    companyName: 'Global Solutions Ltd.',
-    title: 'Data Analyst Trainee',
-    description: 'Work with large datasets, create reports, and help us make data-driven decisions. Opportunity to learn various analytical tools.',
-    location: 'Pune',
-    salaryPackage: '4.5 LPA',
-    eligibility: {
-      minCGPA: 6.5,
-      requiredBranches: ['CSE', 'IT', 'ECE'],
-      maxBacklogs: 1,
-      requiredSkills: ['Python', 'SQL', 'Excel'],
-      yearSem: ['4th Year, 7th Sem'],
-    },
-    last_date_to_apply: '2023-12-15T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f',
-    isActive: true,
-    createdAt: '2023-10-20T11:30:00.000Z',
-  },
-  {
-    _id: '3',
-    companyName: 'Creative Minds Agency',
-    title: 'UI/UX Designer Intern',
-    description: 'Design intuitive and engaging user interfaces for our web and mobile applications. Collaborate with product and development teams.',
-    location: 'Remote',
-    salaryPackage: 'Negotiable',
-    eligibility: {
-      minCGPA: 6.0,
-      requiredBranches: ['Any'],
-      maxBacklogs: 0,
-      requiredSkills: ['Figma', 'Adobe XD', 'Prototyping'],
-      yearSem: ['3rd Year, 5th Sem', '4th Year, 7th Sem'],
-    },
-    last_date_to_apply: '2023-11-25T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f',
-    isActive: true,
-    createdAt: '2023-10-18T09:00:00.000Z',
-  },
-  {
-    _id: '4',
-    companyName: 'Fintech Innovations',
-    title: 'Backend Developer',
-    description: 'Develop and maintain robust backend services for our financial applications. Strong focus on scalability and security.',
-    location: 'Hyderabad',
-    salaryPackage: '8 LPA',
-    eligibility: {
-      minCGPA: 7.5,
-      requiredBranches: ['CSE', 'IT'],
-      maxBacklogs: 0,
-      requiredSkills: ['Java', 'Spring Boot', 'REST APIs'],
-      yearSem: ['4th Year, 8th Sem'],
-    },
-    last_date_to_apply: '2023-12-05T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f',
-    isActive: true,
-    createdAt: '2023-10-22T14:00:00.000Z',
-  },
-  {
-    _id: '5',
-    companyName: 'HealthTech Solutions',
-    title: 'Mobile App Developer (Android)',
-    description: 'Build high-performance Android applications for the healthcare sector. Work with a passionate team of developers.',
-    location: 'Bangalore',
-    salaryPackage: '6 LPA',
-    eligibility: {
-      minCGPA: 6.8,
-      requiredBranches: ['CSE', 'ECE'],
-      maxBacklogs: 0,
-      requiredSkills: ['Kotlin', 'Android SDK', 'Firebase'],
-      yearSem: ['3rd Year, 6th Sem', '4th Year, 7th Sem'],
-    },
-    last_date_to_apply: '2023-12-01T00:00:00.000Z',
-    postedBy: '652a2d4b6c9d0a0b1c2d3e4f',
-    isActive: true,
-    createdAt: '2023-10-16T16:00:00.000Z',
-  },
-];
+import { getAllJobs, deleteJob } from '../../services/jobsAPI';
+import { useNavigate } from 'react-router-dom';
 
 
 const JobList = () => {
-  const [jobs, setJobs] = useState(initialJobsData); // Use state for data
+  const navigate = useNavigate();
+  const [jobs, setJobs] = useState([]); // Use state for data
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('latest'); 
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [hoveredCardId, setHoveredCardId] = useState(null); // State for hover control
 
   // --- HANDLERS FOR ADMIN ACTIONS ---
-  const handleDelete = (_id) => {
-    if (window.confirm("Are you sure you want to delete this job posting?")) {
-      // Logic to remove job from state
-      setJobs(jobs.filter(job => job._id !== _id));
+  const handleDelete = async (_id) => {
+    if (!window.confirm("Are you sure you want to delete this job posting?")) return;
+    try {
+      await deleteJob(_id);
+      // remove locally on success
+      setJobs(prev => prev.filter(job => job._id !== _id));
       setHoveredCardId(null);
-      // In a real app, this would be an API call
-      console.log(`Deleted job with ID: ${_id}`);
+    } catch (err) {
+      console.error('Failed to delete job:', err);
+      alert('Unable to delete job. Please try again.');
     }
   };
-
-  const handleEdit = (_id) => {
-    // In a real app, this would navigate to an edit form
-    console.log(`Edit button clicked for job ID: ${_id}`);
-    alert(`Functionality to edit job ${_id} will be implemented here.`);
-  };
-
   const handlePostNewJob = () => {
     // Functionality to open the Add News form/modal will go here
-    console.log("Post New Job button clicked (Functionality to be added later)");
+    navigate("/jobs/add");
   };
   // ---------------------------------
 
   useEffect(() => {
     let results = jobs.filter(job =>
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.eligibility.requiredSkills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()))
+      (job.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (job.companyName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (job.location || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (job.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ((job.eligibility?.requiredSkills || []).some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase())))
     );
 
     // Filter by isActive
@@ -160,6 +61,31 @@ const JobList = () => {
 
     setFilteredJobs(results);
   }, [searchTerm, sortBy, jobs]); // Depend on 'jobs' state now
+
+  // Fetch all jobs from API on mount and merge/replace initial data
+  useEffect(() => {
+    let mounted = true;
+    const controller = new AbortController();
+
+    const fetchAll = async () => {
+      try {
+        const data = await getAllJobs();
+        const jobsArray = Array.isArray(data) ? data : (data.data || data.jobs || []);
+        if (mounted && jobsArray.length > 0) {
+          setJobs(jobsArray);
+        }
+      } catch (err) {
+        console.warn('Failed to load jobs from API, keeping initialJobsData. Reason:', err?.message || err);
+      }
+    };
+
+    fetchAll();
+
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -224,16 +150,13 @@ const JobList = () => {
                         •••
                     </button>
                     
-                    {(hoveredCardId === job._id) && (
-                        <div className="job-actions">
-                            <button className="action-btn edit-btn" onClick={() => handleEdit(job._id)}>
-                                Edit
-                            </button>
-                            <button className="action-btn delete-btn" onClick={() => handleDelete(job._id)}>
-                                Delete
-                            </button>
-                        </div>
-                    )}
+          {(hoveredCardId === job._id) && (
+            <div className="job-actions">
+              <button className="action-btn delete-btn" onClick={() => handleDelete(job._id)}>
+                Delete
+              </button>
+            </div>
+          )}
                 </div>
               </div>
               

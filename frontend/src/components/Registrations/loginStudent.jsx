@@ -22,7 +22,7 @@ export default function LoginStudent() {
     e.preventDefault();
     try {
       const response = await loginAPI('student', formData);
-      
+      console.log(response)
       // Call the login method from the context object
       auth.login(response.data, 'student'); 
       
