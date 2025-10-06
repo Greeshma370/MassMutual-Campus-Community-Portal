@@ -29,9 +29,13 @@ router.post("/", protect, authorizeRoles("student"), async (req, res) => {
       });
     }
 
+    // Initialize rounds with pending status
+    const rounds = job.rounds.map(roundName => ({ roundName, status: 'pending' }));
+
     const application = await Application.create({
       studentId,
       jobId,
+      rounds,
       status: "pending",
       appliedDate: Date.now(), // matches schema
       updatedAt: Date.now(),
@@ -78,11 +82,11 @@ router.get("/", protect, async (req, res) => {
 });
 
 // @route   PUT /api/applications/:id
-// @desc    Update application status or faculty notes
+// @desc    Update application status, rounds, or faculty notes
 // @access  Private (Faculty/Management only)
 router.put("/:id", protect, authorizeRoles("faculty", "management"), async (req, res) => {
   try {
-    const { status, facultyNotes } = req.body;
+    const { status, facultyNotes, rounds } = req.body;
 
     const application = await Application.findById(req.params.id);
     if (!application) {
@@ -91,6 +95,7 @@ router.put("/:id", protect, authorizeRoles("faculty", "management"), async (req,
 
     if (status) application.status = status;
     if (facultyNotes) application.facultyNotes = facultyNotes;
+    if (rounds) application.rounds = rounds;
     application.updatedAt = Date.now();
 
     await application.save();

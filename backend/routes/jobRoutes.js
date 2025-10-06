@@ -8,11 +8,11 @@ const router = express.Router();
 // @route   POST /api/jobs
 // @desc    Create a new job posting
 // @access  Private (Faculty only)
-router.post("/", protect, authorizeRoles("management"), async (req, res) => {
-  const { companyName, title, description, location, salaryPackage, eligibility, last_date_to_apply } = req.body;
+router.post("/", protect, authorizeRoles("faculty","management"), async (req, res) => {
+  const { companyName, title, description, location, salaryPackage, eligibility, last_date_to_apply, rounds } = req.body;
   try {
     const job = await Job.create({
-      companyName, title, description, location, salaryPackage, eligibility, last_date_to_apply,
+      companyName, title, description, location, salaryPackage, eligibility, last_date_to_apply, rounds,
       postedBy: req.user.id, // Faculty ID from authenticated user
     });
     res.status(201).json(job);
@@ -82,7 +82,7 @@ router.get("/:id", protect, async (req, res) => {
 // @desc    Update a job posting (Faculty/Management)
 // @access  Private (Faculty who posted it, or Management)
 router.put("/:id", protect, authorizeRoles("faculty", "management"), async (req, res) => {
-  const { companyName, title, description, location, salaryPackage, eligibility, last_date_to_apply, isActive } = req.body;
+  const { companyName, title, description, location, salaryPackage, eligibility, last_date_to_apply, isActive, rounds } = req.body;
   try {
     let job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: "Job not found" });
@@ -100,6 +100,7 @@ router.put("/:id", protect, authorizeRoles("faculty", "management"), async (req,
     job.eligibility = eligibility || job.eligibility;
     job.last_date_to_apply = last_date_to_apply || job.last_date_to_apply;
     job.isActive = isActive !== undefined ? isActive : job.isActive;
+    job.rounds = rounds || job.rounds;
 
     await job.save();
     res.json({ message: "Job updated successfully", job });

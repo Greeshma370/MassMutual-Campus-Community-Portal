@@ -15,6 +15,7 @@ const initialForm = {
   maxBacklogs: "",
   requiredSkills: "",
   yearSem: "",
+  rounds: "",
   last_date_to_apply: "",
   isActive: true,
 };
@@ -55,6 +56,7 @@ export default function JobForm() {
         requiredSkills: form.requiredSkills ? form.requiredSkills.split(",").map(s => s.trim()).filter(Boolean) : [],
         yearSem: form.yearSem ? form.yearSem.split(",").map(s => s.trim()).filter(Boolean) : [],
       },
+      rounds: form.rounds ? form.rounds.split(",").map(s => s.trim()).filter(Boolean) : [],
       last_date_to_apply: form.last_date_to_apply,
       isActive: !!form.isActive,
     };
@@ -135,6 +137,11 @@ export default function JobForm() {
       <label>
         Eligible Year/Sem (comma separated)
         <input name="yearSem" value={form.yearSem} onChange={handleChange} placeholder="3rd Year, 4th Year" />
+      </label>
+
+      <label>
+        Rounds (comma separated)
+        <input name="rounds" value={form.rounds} onChange={handleChange} placeholder="Aptitude, Technical, HR" />
       </label>
 
       <label>

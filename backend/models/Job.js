@@ -14,11 +14,12 @@ const jobSchema = new mongoose.Schema({
     yearSem: [String], // e.g., ["3rd Year, 6th Sem", "4th Year, 7th Sem"]
   },
   last_date_to_apply: { type: Date, required: true },
+  rounds: [String],
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Faculty",
     required: true,
-  },
+  },  
   isActive: { type: Boolean, default: true }, // Faculty can toggle job visibility
   createdAt: { type: Date, default: Date.now },
 });

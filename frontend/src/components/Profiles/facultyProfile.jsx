@@ -1,51 +1,73 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './facultyProfile.css';
-
-// Dummy data representing the faculty profile
-const facultyData = {
-  name: 'Dr. Johnathan Doe',
-  email: 'john.doe@university.edu',
-  department: 'Computer Science',
-  role: 'Faculty',
-};
+import { getFacultyById } from '../../services/authAPI';
 
 const FacultyProfile = () => {
-  // Placeholder functions for actions (no functionality required yet)
-  const handleEdit = () => {
-    console.log('Edit profile button clicked. (Functionality TBD)');
+  const [faculty, setFaculty] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const getIdFromToken = () => {
+    try {
+      const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+      if (!token) return null;
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+      const payload = JSON.parse(atob(parts[1]));
+      return payload?.id;
+    } catch (e) {
+      return null;
+    }
   };
 
-  const handleDelete = () => {
-    console.log('Delete profile button clicked. (Functionality TBD)');
-  };
+  useEffect(() => {
+    let mounted = true;
+    const id = getIdFromToken();
+    if (!id) {
+      setError('Not authenticated');
+      setLoading(false);
+      return;
+    }
+
+    const fetchProfile = async () => {
+      try {
+        const res = await getFacultyById(id);
+        const data = res?.data?.data || res?.data || null;
+        if (mounted) setFaculty(data);
+      } catch (err) {
+        console.error('Error fetching faculty profile', err);
+        if (mounted) setError(err?.response?.data?.message || err.message || 'Failed to load profile');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchProfile();
+    return () => { mounted = false; };
+  }, []);
+
+  const handleEdit = () => console.log('Edit profile clicked');
+  const handleDelete = () => console.log('Delete profile clicked');
+
+  if (loading) return <div className="faculty-profile-container">Loading...</div>;
+  if (error) return <div className="faculty-profile-container">Error: {error}</div>;
 
   return (
     <div className="faculty-profile-container">
       <div className="profile-card">
-        {/* Profile Details */}
         <div className="profile-details">
-          <h1 className="profile-name">{facultyData.name}</h1>
-          <p className="profile-role">{facultyData.role}</p>
-          
+          <h1 className="profile-name">{faculty?.name || 'Unnamed'}</h1>
+          <p className="profile-role">{faculty?.role || 'Faculty'}</p>
+
           <div className="info-section">
             <span className="info-label">Email:</span>
-            <span className="info-value">{facultyData.email}</span>
+            <span className="info-value">{faculty?.email || 'N/A'}</span>
           </div>
-          
+
           <div className="info-section">
             <span className="info-label">Department:</span>
-            <span className="info-value">{facultyData.department}</span>
+            <span className="info-value">{faculty?.department || 'N/A'}</span>
           </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="profile-actions">
-          <button className="action-btn edit-btn" onClick={handleEdit}>
-            Edit Profile
-          </button>
-          <button className="action-btn delete-btn" onClick={handleDelete}>
-            Delete Profile
-          </button>
         </div>
       </div>
     </div>

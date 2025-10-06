@@ -38,13 +38,13 @@ const StudentProfile = () => {
   useEffect(() => {
     let mounted = true;
     const controller = new AbortController();
-    const fetchProfile = async () => {
+    const fetchProfile = async (_id) => {
       setLoading(true);
       try {
         let res;
         // if an :id param is present, fetch that student's profile
         if (id) {
-          res = await getStudentById(id);
+          res = await getStudentById(_id);
         } else {
           res = await getProfile();
         }

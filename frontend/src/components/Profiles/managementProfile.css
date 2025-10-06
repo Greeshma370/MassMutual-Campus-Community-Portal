@@ -1,0 +1,34 @@
+.management-profile-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.management-profile-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 450px;
+  text-align: center;
+}
+
+.profile-header {
+  margin-bottom: 20px;
+}
+
+.profile-name {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #e7e8ea;
+}
+
+.profile-email {
+  font-size: 1.1rem;
+  color: #faf7f7;
+}
+
+.error-text {
+  color: red;
+  font-weight: 500;
+}

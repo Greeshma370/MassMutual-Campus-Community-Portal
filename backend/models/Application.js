@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+const roundSchema = new mongoose.Schema({
+  roundName: { type: String, required: true },
+  status: {
+    type: String,
+    enum: ["pending", "shortlisted", "accepted", "rejected"],
+    default: "pending",
+  },
+});
+
 const applicationSchema = new mongoose.Schema({
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -11,6 +20,7 @@ const applicationSchema = new mongoose.Schema({
     ref: "Job",
     required: true,
   },
+  rounds: [roundSchema], // Array of rounds with their statuses
   status: {
     type: String,
     enum: ["pending", "shortlisted", "accepted", "rejected", "withdrawn"],
