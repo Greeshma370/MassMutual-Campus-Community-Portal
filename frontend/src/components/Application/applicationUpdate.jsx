@@ -13,15 +13,48 @@ const ApplicationListFaculty = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleStatusChange = async (appId, newStatus) => {
-    // ... (rest of the function remains the same)
+    try {
+      setApplications(prev => prev.map(a => a._id === appId ? { ...a, status: newStatus, updatedAt: new Date() } : a));
+      await updateApplication(appId, { status: newStatus });
+    } catch (err) {
+      console.error('Failed to update application status', err);
+      setError(err?.response?.data?.message || err?.message || 'Failed to update application');
+      // Simple rollback on failure by refetching
+      fetchApps();
+    }
   };
 
   const handleRoundStatusChange = async (appId, roundIndex, newStatus) => {
-    // ... (rest of the function remains the same)
+    try {
+      const appToUpdate = applications.find(a => a._id === appId);
+      const updatedRounds = [...appToUpdate.rounds];
+      updatedRounds[roundIndex].status = newStatus;
+
+      setApplications(prev => prev.map(a => a._id === appId ? { ...a, rounds: updatedRounds, updatedAt: new Date() } : a));
+      await updateApplication(appId, { rounds: updatedRounds });
+    } catch (err) {
+      console.error('Failed to update round status', err);
+      setError(err?.response?.data?.message || err?.message || 'Failed to update round status');
+      // Simple rollback on failure by refetching
+      fetchApps();
+    }
   };
 
   const fetchApps = async () => {
-    // ... (rest of the function remains the same)
+    if (!isAuthenticated || !(role === 'faculty' || role === 'management')) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await getApplications();
+      const data = res?.data ?? res;
+      const appsArray = Array.isArray(data) ? data : (data.data || data.applications || []);
+      setApplications(appsArray);
+    } catch (err) {
+      console.error('Failed to fetch applications', err);
+      setError(err?.response?.data?.message || err?.message || 'Failed to load applications');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -109,7 +142,55 @@ const ApplicationListFaculty = () => {
         <div className="application-cards-grid">
           {sortedAndFilteredApplications.map((app) => (
             <div key={app._id} className={`application-card status-${app.status}`}>
-              {/* ... (rest of the card JSX remains the same) ... */}
+              <div className="card-header">
+                <div className="student-info">
+                    <strong>Student:</strong> {app.studentId?.name} ({app.studentId?.rollNo})
+                    <br />
+                    <strong>Dept:</strong> {app.studentId?.department}
+                </div>
+                <div className="status-selector-container">
+                    <select className={`status-selector status-selector-${app.status}`} value={app.status} onChange={(e) => handleStatusChange(app._id, e.target.value)}>
+                        <option value="pending">Pending</option>
+                        <option value="shortlisted">Shortlisted</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+              </div>
+              
+              <h3 className="job-title">{app.jobId?.title}</h3>
+              <p className="job-company">{app.jobId?.companyName}</p>
+
+              <div className="meta-info">
+                <span>📍 {app.jobId?.location}</span>
+                <span>💰 {app.jobId?.salaryPackage}</span>
+              </div>
+              
+              <div className="dates-info">
+                <span>Applied: {new Date(app.appliedDate).toLocaleDateString()}</span>
+                <span>Last Update: {new Date(app.updatedAt).toLocaleDateString()}</span>
+              </div>
+              
+              {app.rounds && app.rounds.length > 0 && (
+                <div className="rounds-update">
+                  <h4>Update Round Status</h4>
+                  {app.rounds.map((round, index) => (
+                    <div key={index} className="round-status-updater">
+                      <label>{round.roundName}:</label>
+                      <select value={round.status} onChange={(e) => handleRoundStatusChange(app._id, index, e.target.value)}>
+                        <option value="pending">Pending</option>
+                        <option value="shortlisted">Shortlisted</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="faculty-notes">
+                  <strong>Notes:</strong> {app.facultyNotes || "No notes available."}
+              </div>
             </div>
           ))}
         </div>
