@@ -1,44 +1,21 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './applicationUpdate.css';
 import { getApplications, updateApplication } from '../../services/applicationsAPI';
 import { useAuth } from '../../context/AuthContext';
 
 const ApplicationListFaculty = () => {
   const { isAuthenticated, role } = useAuth();
+  const navigate = useNavigate();
   const [applications, setApplications] = useState([]);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState('asc');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-
-  const handleStatusChange = async (appId, newStatus) => {
-    try {
-      setApplications(prev => prev.map(a => a._id === appId ? { ...a, status: newStatus, updatedAt: new Date() } : a));
-      await updateApplication(appId, { status: newStatus });
-    } catch (err) {
-      console.error('Failed to update application status', err);
-      setError(err?.response?.data?.message || err?.message || 'Failed to update application');
-      // Simple rollback on failure by refetching
-      fetchApps();
-    }
-  };
-
-  const handleRoundStatusChange = async (appId, roundIndex, newStatus) => {
-    try {
-      const appToUpdate = applications.find(a => a._id === appId);
-      const updatedRounds = [...appToUpdate.rounds];
-      updatedRounds[roundIndex].status = newStatus;
-
-      setApplications(prev => prev.map(a => a._id === appId ? { ...a, rounds: updatedRounds, updatedAt: new Date() } : a));
-      await updateApplication(appId, { rounds: updatedRounds });
-    } catch (err) {
-      console.error('Failed to update round status', err);
-      setError(err?.response?.data?.message || err?.message || 'Failed to update round status');
-      // Simple rollback on failure by refetching
-      fetchApps();
-    }
-  };
+  const [deptFilter, setDeptFilter] = useState('All');
+  const [yearFilter, setYearFilter] = useState('All');
+  const [companyFilter, setCompanyFilter] = useState('All');
 
   const fetchApps = async () => {
     if (!isAuthenticated || !(role === 'faculty' || role === 'management')) return;
@@ -61,10 +38,34 @@ const ApplicationListFaculty = () => {
     fetchApps();
   }, [isAuthenticated, role]);
 
+  const handleStatusChange = async (appId, newStatus) => {
+    try {
+      setApplications(prev =>
+        prev.map(a => a._id === appId ? { ...a, status: newStatus, updatedAt: new Date() } : a)
+      );
+      await updateApplication(appId, { status: newStatus });
+    } catch {
+      fetchApps(); // rollback
+    }
+  };
+
+  const handleRoundStatusChange = async (appId, roundIndex, newStatus) => {
+    try {
+      const appToUpdate = applications.find(a => a._id === appId);
+      const updatedRounds = [...appToUpdate.rounds];
+      updatedRounds[roundIndex].status = newStatus;
+      setApplications(prev =>
+        prev.map(a => a._id === appId ? { ...a, rounds: updatedRounds, updatedAt: new Date() } : a)
+      );
+      await updateApplication(appId, { rounds: updatedRounds });
+    } catch {
+      fetchApps(); // rollback
+    }
+  };
+
   const handleSort = (key) => {
-    if (sortKey === key) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
+    if (sortKey === key) setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    else {
       setSortKey(key);
       setSortOrder('asc');
     }
@@ -74,42 +75,48 @@ const ApplicationListFaculty = () => {
     let filteredApps = [...applications];
 
     if (searchTerm) {
-      const searchTermLower = searchTerm.toLowerCase();
-      filteredApps = filteredApps.filter(app => {
-        const studentName = app.studentId?.name?.toLowerCase() || '';
-        const jobTitle = app.jobId?.title?.toLowerCase() || '';
-        const companyName = app.jobId?.companyName?.toLowerCase() || '';
-        return studentName.includes(searchTermLower) || jobTitle.includes(searchTermLower) || companyName.includes(searchTermLower);
-      });
+      const term = searchTerm.toLowerCase();
+      filteredApps = filteredApps.filter(app =>
+        (app.studentId?.name || '').toLowerCase().includes(term) ||
+        (app.jobId?.title || '').toLowerCase().includes(term) ||
+        (app.jobId?.companyName || '').toLowerCase().includes(term)
+      );
+    }
+
+    // Filters
+    if (deptFilter !== 'All') {
+      filteredApps = filteredApps.filter(app => (app.studentId?.department || '') === deptFilter);
+    }
+    if (yearFilter !== 'All') {
+      filteredApps = filteredApps.filter(app => (app.studentId?.yearSem || '') === yearFilter);
+    }
+    if (companyFilter !== 'All') {
+      filteredApps = filteredApps.filter(app => (app.jobId?.companyName || '') === companyFilter);
     }
 
     if (!sortKey) return filteredApps;
 
-    const sortableApps = [...filteredApps];
-    sortableApps.sort((a, b) => {
-      let valA, valB;
-      if (sortKey === 'company') {
-        valA = a.jobId.companyName.toLowerCase();
-        valB = b.jobId.companyName.toLowerCase();
-      } else if (sortKey === 'department') {
-        valA = a.studentId.department.toLowerCase();
-        valB = b.studentId.department.toLowerCase();
-      } else {
-        return 0;
-      }
-
-      if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
-      if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
+    return filteredApps.sort((a, b) => {
+      const valA = sortKey === 'company'
+        ? a.jobId.companyName.toLowerCase()
+        : a.studentId.department.toLowerCase();
+      const valB = sortKey === 'company'
+        ? b.jobId.companyName.toLowerCase()
+        : b.studentId.department.toLowerCase();
+      return sortOrder === 'asc' ? (valA < valB ? -1 : 1) : (valA > valB ? -1 : 1);
     });
-
-    return sortableApps;
-  }, [applications, sortKey, sortOrder, searchTerm]);
+  }, [applications, sortKey, sortOrder, searchTerm, deptFilter, yearFilter, companyFilter]);
 
   return (
     <div className="applications-list-container">
       <h2 className="applications-title">Faculty Portal: Student Applications</h2>
 
+      {/* Back Button */}
+      <button className="back-home-btn" onClick={() => navigate('/dashboard/faculty')}>
+        ← Back to Dashboard
+      </button>
+
+      {/* Search & Filters */}
       <div className="controls-container">
         <div className="search-bar-container">
           <input
@@ -119,45 +126,64 @@ const ApplicationListFaculty = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-        </div>
 
-        <div className="sort-controls">
-          <span>Sort by:</span>
-          <button className={`sort-btn ${sortKey === 'company' ? 'active' : ''}`} onClick={() => handleSort('company')}>
-            Company Name {sortKey === 'company' && (sortOrder === 'asc' ? '▲' : '▼')}
-          </button>
-          <button className={`sort-btn ${sortKey === 'department' ? 'active' : ''}`} onClick={() => handleSort('department')}>
-            Department {sortKey === 'department' && (sortOrder === 'asc' ? '▲' : '▼')}
-          </button>
+          {/* Department Filter */}
+          <select value={deptFilter} onChange={(e) => setDeptFilter(e.target.value)}>
+            <option value="All">All Departments</option>
+            {Array.from(new Set(applications.map(a => a.studentId?.department).filter(Boolean))).map(d => (
+              <option key={d} value={d}>{d}</option>
+            ))}
+          </select>
+
+          {/* Year Filter */}
+          <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value)}>
+            <option value="All">All Years</option>
+            {Array.from(new Set(applications.map(a => a.studentId?.yearSem).filter(Boolean))).map(y => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+
+          {/* Company Filter */}
+          <select value={companyFilter} onChange={(e) => setCompanyFilter(e.target.value)}>
+            <option value="All">All Companies</option>
+            {Array.from(new Set(applications.map(a => a.jobId?.companyName).filter(Boolean))).map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
         </div>
       </div>
 
-
+      {/* Loading / Error */}
       {loading && <p>Loading applications...</p>}
-      {error && <p className="error-text">Error: {error}</p>}
+      {error && <p className="error-text">{error}</p>}
 
+      {/* Applications List */}
       {!loading && sortedAndFilteredApplications.length === 0 ? (
-        <p className="no-applications-message">{searchTerm ? 'No applications match your search.' : 'No applications found.'}</p>
+        <p className="no-applications-message">
+          {searchTerm ? 'No applications match your search.' : 'No applications found.'}
+        </p>
       ) : (
         <div className="application-cards-grid">
           {sortedAndFilteredApplications.map((app) => (
             <div key={app._id} className={`application-card status-${app.status}`}>
               <div className="card-header">
                 <div className="student-info">
-                    <strong>Student:</strong> {app.studentId?.name} ({app.studentId?.rollNo})
-                    <br />
-                    <strong>Dept:</strong> {app.studentId?.department}
+                  <strong>Student:</strong> {app.studentId?.name}<br />
+                  <strong>Roll No:</strong> {app.studentId?.rollnumber || "N/A"}<br />
+                  <strong>Dept:</strong> {app.studentId?.department}
                 </div>
-                <div className="status-selector-container">
-                    <select className={`status-selector status-selector-${app.status}`} value={app.status} onChange={(e) => handleStatusChange(app._id, e.target.value)}>
-                        <option value="pending">Pending</option>
-                        <option value="shortlisted">Shortlisted</option>
-                        <option value="accepted">Accepted</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
-                </div>
+                <select
+                  className={`status-selector status-selector-${app.status}`}
+                  value={app.status}
+                  onChange={(e) => handleStatusChange(app._id, e.target.value)}
+                >
+                  <option value="pending">Pending</option>
+                  <option value="shortlisted">Shortlisted</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                </select>
               </div>
-              
+
               <h3 className="job-title">{app.jobId?.title}</h3>
               <p className="job-company">{app.jobId?.companyName}</p>
 
@@ -165,19 +191,22 @@ const ApplicationListFaculty = () => {
                 <span>📍 {app.jobId?.location}</span>
                 <span>💰 {app.jobId?.salaryPackage}</span>
               </div>
-              
+
               <div className="dates-info">
                 <span>Applied: {new Date(app.appliedDate).toLocaleDateString()}</span>
                 <span>Last Update: {new Date(app.updatedAt).toLocaleDateString()}</span>
               </div>
-              
-              {app.rounds && app.rounds.length > 0 && (
+
+              {app.rounds?.length > 0 && (
                 <div className="rounds-update">
                   <h4>Update Round Status</h4>
                   {app.rounds.map((round, index) => (
                     <div key={index} className="round-status-updater">
                       <label>{round.roundName}:</label>
-                      <select value={round.status} onChange={(e) => handleRoundStatusChange(app._id, index, e.target.value)}>
+                      <select
+                        value={round.status}
+                        onChange={(e) => handleRoundStatusChange(app._id, index, e.target.value)}
+                      >
                         <option value="pending">Pending</option>
                         <option value="shortlisted">Shortlisted</option>
                         <option value="accepted">Accepted</option>
@@ -187,10 +216,6 @@ const ApplicationListFaculty = () => {
                   ))}
                 </div>
               )}
-
-              <div className="faculty-notes">
-                  <strong>Notes:</strong> {app.facultyNotes || "No notes available."}
-              </div>
             </div>
           ))}
         </div>

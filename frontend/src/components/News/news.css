@@ -1,176 +1,231 @@
-/* --- CONTAINER & HEADING --- */
+/* =========================
+   CONTAINER & HEADING
+========================= */
 .news-container {
-    max-width: 900px;
-    margin: 2rem auto;
-    padding: 1rem;
-    text-align: center;
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* opaque light white shine */
+  background: linear-gradient(90deg, #cdd5d593  0%,#ced5d5ef  60%);
+  box-shadow: #d4d7d9;
+  border-radius: 20px;
+  margin-bottom: 5rem;
 }
 
-.news-container h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    color: #333;
+.news-container h2{
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  color:rgb(19, 16, 16);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* --- ADD NEWS BUTTON STYLES --- */
-.register-btn-wrapper {
-    margin: 1rem 0 2rem;
-}
-
-.register-btn {
-    /* Combined CSS for Add News Button */
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
-    padding: 0.8rem 2rem;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: bold;
-    transition: transform 0.2s, background 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 auto; /* Center the button */
-}
-
-.register-btn:hover {
-    transform: scale(1.05);
-    background: linear-gradient(135deg, #0056b3, #003f7f);
-}
-
-/* --- NEWS LIST LAYOUT --- */
+/* =========================
+   NEWS LIST GRID
+========================= */
 .news-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.8rem;
 }
 
-/* --- NEWS CARD STYLES (Viewing News) --- */
+/* =========================
+   NEWS CARD
+========================= */
 .news-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 1.2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: left;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    /* For positioning the dots button */
-    position: relative; 
+  background: rgba(255,255,255,0.08);
+  /* backdrop-filter: blur(12px); */
+  border-radius: 18px;
+  padding: 1.8rem;
+  padding-bottom: 2.6rem; /* room for bottom-aligned actions */
+  overflow: hidden; /* keep absolute children inside rounded card */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.15);
 }
 
 .news-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.18);
 }
 
+/* =========================
+   HEADER & TAG
+========================= */
 .news-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Aligns title and tag at the top */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
 }
 
-.news-card h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: #222;
-    flex-grow: 1;
-    padding-right: 0.5rem;
-}
-
-.news-card p {
-    margin: 0.8rem 0;
-    color: #444;
-    flex-grow: 1; 
-}
-
-/* (Retained styles for .news-meta, .tag.news, .tag.event, .tag.drive) */
-.news-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem; /* Reduced margin */
+.news-header h3 {
+  font-size: 1.4rem;
+  color: #fff;
+  margin: 0;
+  flex-grow: 1;
 }
 
 .tag {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    text-transform: capitalize;
-    flex-shrink: 0;
+  padding: 5px 14px;
+  border-radius: 25px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff;
+  background: #555;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.tag.news { background: #e3f2fd; color: #1976d2; }
-.tag.event { background: #fff3e0; color: #e65100; }
-.tag.drive { background: #e8f5e9; color: #2e7d32; }
+.tag.news {
+  background: linear-gradient(135deg, #42a5f5, #1e88e5);
+}
 
+.tag.event {
+  background: linear-gradient(135deg, #ffb74d, #fb8c00);
+}
 
-/* --- NEW ACTION CONTROL STYLES --- */
+.tag.drive {
+  background: linear-gradient(135deg, #66bb6a, #388e3c);
+}
 
+.tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* =========================
+   DESCRIPTION
+========================= */
+.news-description {
+  color: #e0e0e0;
+  flex-grow: 1;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  word-wrap: break-word;
+}
+
+/* =========================
+   META INFORMATION
+========================= */
+.news-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: #ccc;
+  margin-bottom: 0.8rem;
+}
+
+/* =========================
+   ACTION CONTROL AREA
+========================= */
 .action-control-area {
-    /* Contains the dots button and the action buttons */
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-top: 0.5rem;
-    border-top: 1px dashed #eee;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .dots-btn {
-    background: none;
-    border: none;
-    color: #999;
-    font-size: 1.5rem;
-    line-height: 1;
-    padding: 0 8px;
-    cursor: pointer;
-    transition: color 0.2s;
-    font-weight: bold;
-    letter-spacing: 0.1em;
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .dots-btn:hover {
-    color: #333;
+  transform: scale(1.2);
+  color: #fff;
 }
 
-.news-actions {
-    /* Container for Edit/Delete buttons */
-    display: flex;
-    gap: 0.5rem;
-    margin-left: 1rem; /* Space between dots and actions */
+.news-card .news-actions1{
+  display: flex;
+  gap: 0.6rem;
+  margin-left: 0.6rem;
+  /* place actions at the card's bottom-right */
+  position: absolute;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  z-index: 1000;
 }
 
 .action-btn {
-    padding: 0.4rem 0.8rem;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    cursor: pointer;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* DELETE BUTTON */
+.news-card .delete-btn {
+  background: rgba(202, 170, 170, 0.415);
+  color: #ff5757;
+  border-color: rgba(255,87,87,0.4);
+  min-width: 68px;
+  padding: 0.4rem 0.75rem;
+  border-radius: 10px;
+  position: absolute; /* anchor inside the card */
+  left: 6rem;
+  bottom: 0rem;
+  z-index: 1200;
+}
+
+.news-card .delete-btn:hover {
+  background: rgba(255,87,87,0.35);
+  transform: scale(1.05);
+}
+
+/* =========================
+   RESPONSIVENESS
+========================= */
+@media (max-width: 900px) {
+  .news-list {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .news-list {
+    grid-template-columns: 1fr;
+  }
+
+  .news-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .dots-btn {
+    font-size: 1.3rem;
+  }
+
+  .action-btn {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .news-container h2 {
+    font-size: 1.8rem;
+  }
+
+  .news-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .news-description {
     font-size: 0.9rem;
-    transition: background-color 0.2s, border-color 0.2s;
-    font-weight: 500;
-}
-
-.edit-btn {
-    background-color: #f0f4c3;
-    color: #558b2f;
-    border-color: #dce775;
-}
-
-.edit-btn:hover {
-    background-color: #dce775;
-}
-
-.delete-btn {
-    background-color: #ffebee;
-    color: #c62828;
-    border-color: #ef9a9a;
-}
-
-.delete-btn:hover {
-    background-color: #ef9a9a;
+  }
 }

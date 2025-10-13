@@ -9,7 +9,7 @@ const router = express.Router();
 // @access  Private (Management)
 router.post("/", protect, authorizeRoles("management"), async (req, res) => {
   try {
-    const { name, email, password, department } = req.body;
+    const { name, email,emp_id, password, department } = req.body;
     
     const facultyExists = await Faculty.findOne({ email });
     if (facultyExists) {
@@ -21,6 +21,7 @@ router.post("/", protect, authorizeRoles("management"), async (req, res) => {
 
     const faculty = await Faculty.create({
       name,
+      emp_id,
       email,
       password,
       department,

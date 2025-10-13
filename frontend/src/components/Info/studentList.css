@@ -1,71 +1,253 @@
+/* === Page Background === */
+.student-page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #1f3c88 0%, #1abc9c 100%);
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* === Container === */
 .student-list-container {
-  padding: 20px;
-  max-width: 1100px;
-  margin: auto;
+  width: 100%;
+  max-width: 1200px;
 }
 
+/* === Title === */
 .student-list-title {
-  font-size: 24px;
+  font-size: 2rem;
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #fff;
+  letter-spacing: 0.5px;
 }
 
+/* === Search Bar === */
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* increased spacing */
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.search-bar-container input {
+  width: 100%;
+  max-width: 420px;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1.8px solid #cfd8e3;
+  background-color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-bar-container input:focus {
+  border-color: #1abc9c;
+  box-shadow: 0 4px 12px rgba(26, 188, 156, 0.3);
+}
+
+/* Make any select inside the search bar look like the search input (pill) */
+.search-bar-container select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 10px 18px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1.6px solid #cfd8e3;
+  background-color: #ffffff;
+  color: #1f3c88;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.18s ease;
+  cursor: pointer;
+  min-width: 150px;
+  max-width: 260px;
+}
+
+.search-bar-container select:hover {
+  box-shadow: 0 8px 20px rgba(31, 60, 136, 0.06);
+}
+
+.search-bar-container select:focus {
+  outline: none;
+  border-color: #1abc9c;
+  box-shadow: 0 8px 20px rgba(26, 188, 156, 0.18);
+}
+
+/* breathing room on wide layouts */
+.search-bar-container select {
+  margin-right: 6px;
+}
+
+/* === Grid === */
 .student-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 25px;
 }
 
+/* === Student Card === */
 .student-card {
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 16px;
+  padding: 1.6rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+  border: none;
 }
 
 .student-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  transform: translateY(-6px);
 }
 
-.student-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 6px;
-  color: #222;
+/* === Header === */
+.student-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
-.student-email,
-.student-department,
-.student-year,
-.student-cgpa,
-.student-backlogs,
-.student-intern,
-.student-resume {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #555;
+.student-header h3 {
+  font-size: 1.25rem;
+  color: #1e293b;
+  font-weight: 600;
 }
 
-.student-resume a {
-  color: #007bff;
+.student-role-badge {
+  background: linear-gradient(135deg, #1abc9c, #1f3c88);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(26, 188, 156, 0.3);
+}
+
+/* === Student Info === */
+.student-card p {
+  font-size: 0.95rem;
+  color: #475569;
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.student-card a {
+  color: #1abc9c;
+  font-weight: 500;
   text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-.student-resume a:hover {
+.student-card a:hover {
+  color: #16a085;
   text-decoration: underline;
 }
 
-.student-skills,
-.student-interests {
-  margin-top: 10px;
+/* === Tags (Skills & Interests) === */
+.tags-section {
+  margin-top: 1.2rem;
 }
 
-.student-skills ul,
-.student-interests ul {
-  margin: 6px 0 0 16px;
-  font-size: 13px;
-  color: #444;
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.tag {
+  background-color: #d0f0ea;
+  color: #0e6655;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tag.interest {
+  background-color: #dceefc;
+  color: #1c5e93;
+  border: 1px solid #3498db;
+}
+
+.tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* === Buttons (if any) === */
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #1abc9c, #1f3c88);
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(26, 188, 156, 0.2);
+}
+
+button:hover,
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(26, 188, 156, 0.35);
+  background: linear-gradient(135deg, #1f3c88, #16a085);
+}
+
+/* === No Student Message === */
+.no-student-msg {
+  text-align: center;
+  color: #fff;
+  font-size: 1rem;
+  margin-top: 20px;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .student-list-title {
+    font-size: 1.6rem;
+  }
+
+  .student-card {
+    padding: 1.3rem;
+  }
+
+  .student-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .student-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-bar-container input {
+    max-width: 100%;
+  }
 }

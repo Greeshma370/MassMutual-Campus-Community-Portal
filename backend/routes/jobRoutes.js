@@ -4,7 +4,7 @@ import Student from "../models/Student.js";
 import { protect, authorizeRoles } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
-
+ 
 // @route   POST /api/jobs
 // @desc    Create a new job posting
 // @access  Private (Faculty only)
@@ -88,9 +88,9 @@ router.put("/:id", protect, authorizeRoles("faculty", "management"), async (req,
     if (!job) return res.status(404).json({ message: "Job not found" });
 
     // Check if faculty is the one who posted it, or if user is management
-    if (req.user.role === "faculty" && job.postedBy.toString() !== req.user.id.toString()) {
-      return res.status(403).json({ message: "Not authorized to update this job" });
-    }
+    // if (req.user.role === "faculty" && job.postedBy.toString() !== req.user.id.toString()) {
+    //   return res.status(403).json({ message: "Not authorized to update this job" });
+    // }
 
     job.companyName = companyName || job.companyName;
     job.title = title || job.title;

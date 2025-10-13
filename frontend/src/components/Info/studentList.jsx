@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
+import {
+  FaEnvelope,
+  FaGraduationCap,
+  FaStar,
+  FaBriefcase,
+  FaFileAlt,
+} from "react-icons/fa";
 import "./studentList.css";
-import { getAllStudents } from '../../services/authAPI';
+import { getAllStudents } from "../../services/authAPI";
 
-const StudentList = () => {
-  // Dummy student data
+export default function StudentList() {
   const dummyStudents = [
     {
       _id: "1",
       name: "Amit Verma",
+      rollnumber: "CS2023001",
       email: "amit.verma@university.edu",
       yearSem: "3rd Year, 6th Sem",
       cgpa: 8.5,
@@ -19,100 +26,130 @@ const StudentList = () => {
       interests: ["Web Development", "AI/ML"],
       role: "student",
     },
-    {
-      _id: "2",
-      name: "Priya Sharma",
-      email: "priya.sharma@university.edu",
-      yearSem: "2nd Year, 4th Sem",
-      cgpa: 9.1,
-      department: "Electrical Engineering",
-      backlogs: 1,
-      intern_details: "Summer internship at Siemens",
-      resume_url: "https://example.com/resume/priya",
-      skills: ["MATLAB", "C++", "VHDL"],
-      interests: ["Embedded Systems", "Robotics"],
-      role: "student",
-    },
-    {
-      _id: "3",
-      name: "Rahul Nair",
-      email: "rahul.nair@university.edu",
-      yearSem: "4th Year, 8th Sem",
-      cgpa: 7.8,
-      department: "Mechanical Engineering",
-      backlogs: 2,
-      intern_details: "Internship at Tata Motors",
-      resume_url: "https://example.com/resume/rahul",
-      skills: ["AutoCAD", "SolidWorks"],
-      interests: ["Automobile Design", "Manufacturing"],
-      role: "student",
-    },
   ];
 
   const [students, setStudents] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [branchFilter, setBranchFilter] = useState('All');
+  const [yearFilter, setYearFilter] = useState('All');
 
   useEffect(() => {
-    let mounted = true;
-    const controller = new AbortController();
-
     const fetchStudents = async () => {
       try {
         const res = await getAllStudents();
         const data = res?.data ?? res;
-        const studentsArray = Array.isArray(data) ? data : (data.data || data.students || []);
-        if (mounted && studentsArray.length > 0) setStudents(studentsArray);
-        else if (mounted) setStudents(dummyStudents); // fallback for dev
+        const studentsArray = Array.isArray(data)
+          ? data
+          : data.data || data.students || [];
+        setStudents(studentsArray.length ? studentsArray : dummyStudents);
       } catch (err) {
-        console.error('Failed to fetch students', err);
-        if (mounted) setStudents(dummyStudents);
+        console.error("Failed to fetch students", err);
+        setStudents(dummyStudents);
       }
     };
 
     fetchStudents();
-
-    return () => {
-      mounted = false;
-      controller.abort();
-    };
   }, []);
 
+  // derive unique branch and year options from students
+  const branchOptions = Array.from(new Set(students.map(s => s.department))).filter(Boolean);
+  const yearOptions = Array.from(new Set(students.map(s => s.yearSem))).filter(Boolean);
+
+  const filteredStudents = students.filter((s) => {
+    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase()) || s.department.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesBranch = branchFilter === 'All' || s.department === branchFilter;
+    const matchesYear = yearFilter === 'All' || s.yearSem === yearFilter;
+    return matchesSearch && matchesBranch && matchesYear;
+  });
+
   return (
-    <div className="student-list-container">
-      <h2 className="student-list-title">Student Profiles</h2>
-      <div className="student-grid">
-        {students.map((student) => (
-          <div key={student._id} className="student-card">
-            <h3 className="student-name">{student.name}</h3>
-            <p className="student-email">📧 {student.email}</p>
-            <p className="student-department">🏫 {student.department}</p>
-            <p className="student-year">📅 {student.yearSem}</p>
-            <p className="student-cgpa">⭐ CGPA: {student.cgpa}</p>
-            <p className="student-backlogs">❌ Backlogs: {student.backlogs}</p>
-            <p className="student-intern">💼 {student.intern_details}</p>
-            <p className="student-resume">
-              📄 <a href={student.resume_url} target="_blank" rel="noreferrer">View Resume</a>
-            </p>
-            <div className="student-skills">
-              <strong>Skills:</strong>
-              <ul>
-                {student.skills.map((skill, idx) => (
-                  <li key={idx}>{skill}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="student-interests">
-              <strong>Interests:</strong>
-              <ul>
-                {student.interests.map((interest, idx) => (
-                  <li key={idx}>{interest}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
+    <div className="student-page">
+      <div className="student-list-container">
+        <h2 className="student-list-title">Student Profiles</h2>
+
+        <div className="search-bar-container">
+          <input
+            type="text"
+            placeholder="🔍 Search by name or department..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <select value={branchFilter} onChange={(e) => setBranchFilter(e.target.value)}>
+            <option value="All">All Branches</option>
+            {branchOptions.map((b) => (
+              <option key={b} value={b}>{b}</option>
+            ))}
+          </select>
+          <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value)}>
+            <option value="All">All Years</option>
+            {yearOptions.map((y) => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="student-grid">
+          {filteredStudents.length > 0 ? (
+            filteredStudents.map((student) => (
+              <div key={student._id} className="student-card">
+                <div className="student-header">
+                  <h3>{student.name}</h3>
+                  <span className="student-role-badge">
+                    {student.role.toUpperCase()}
+                  </span>
+                </div>
+                <p>
+                  {student.rollnumber}
+                </p>
+                <p>
+                  <FaEnvelope /> {student.email}
+                </p>
+                <p>
+                  <FaGraduationCap /> {student.department} - {student.yearSem}
+                </p>
+                <p>
+                  <FaStar /> CGPA: {student.cgpa}
+                </p>
+                <p>❌ Backlogs: {student.backlogs}</p>
+                <p>
+                  <FaBriefcase /> {student.intern_details}
+                </p>
+                <p>
+                  <FaFileAlt />{" "}
+                  <a href={student.resume_url} target="_blank" rel="noreferrer">
+                    View Resume
+                  </a>
+                </p>
+
+                <div className="tags-section">
+                  <div>
+                    <strong>Skills:</strong>
+                    <div className="tag-list">
+                      {student.skills.map((skill, idx) => (
+                        <span key={idx} className="tag">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <strong>Interests:</strong>
+                    <div className="tag-list">
+                      {student.interests.map((interest, idx) => (
+                        <span key={idx} className="tag interest">
+                          {interest}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="no-student-msg">No students found.</p>
+          )}
+        </div>
       </div>
     </div>
   );
-};
-
-export default StudentList;
+}

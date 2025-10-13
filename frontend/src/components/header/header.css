@@ -1,82 +1,175 @@
+/* ===========================
+   HEADER COMMON STYLING
+=========================== */
+* {
+  box-sizing: border-box;
+}
+
 header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* better alignment */
-    padding: 1rem 2rem;
-    background-color: #2d71e7;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    position: sticky; /* stays on scroll */
-    top: 0;
-    left: 0;
-    right: 0; /* ensures full width */
-    width: 100%;
-    z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background-color: #0073e6; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+/* Logo and title */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 header img {
-    height: 50px;
-    margin-right: 1rem;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+header img:hover {
+  transform: scale(1.05);
 }
 
 header h1 {
-    color: #ebe5e5;
-    font-size: 1.5rem;
-    margin: 0;
-    flex-grow: 1;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #ffffffcc;
 }
 
+/* Navigation */
 nav {
-    margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: max-height 0.4s ease;
 }
 
 nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-nav li {
-    color: #fafafa;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    transition: color 0.3s ease;
+nav li a {
+  color: #fff;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
-nav li:hover {
-    color: #007bff;
+nav li a.active {
+  background: linear-gradient(135deg, #25515e7f, #0072ff);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 115, 230, 0.3);
 }
 
-nav a {
-    text-decoration: none;
-    color: inherit;
-}
-
-nav a:hover {
-    color: inherit;
-}
-
-.active {
-    color: #007bff;
-    font-weight: 600;
-}
-
-.register-btn-container {
-  margin-top: 0.5rem;
-}
-
-.register-btn {
-  background-color: #007bff;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border: none;
+/* ===========================
+   HAMBURGER MENU
+=========================== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.15); /* Semi-transparent */
+  padding: 4px;
   border-radius: 6px;
+  border: none;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s ease;
+  z-index: 1100;
 }
 
-.register-btn:hover {
-  background-color: #0056b3;
+.hamburger .bar {
+  height: 3px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.open .bar:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open .bar:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ===========================
+   RESPONSIVE STYLING
+=========================== */
+@media (max-width: 1250px) {
+  .hamburger {
+    display: flex;
+    order: 2;
+  }
+
+  nav {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: #0073e6;
+    overflow: hidden;
+    max-height: 0;
+    flex-direction: column;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: max-height 0.4s ease;
+    z-index: 2000;
+  }
+
+  nav.open {
+    max-height: 1000px;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  nav li {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  nav li a {
+    display: block;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.3rem;
+  }
+
+  header img {
+    width: 45px;
+    height: 45px;
+  }
+
+  nav li a {
+    font-size: 0.95rem;
+  }
 }

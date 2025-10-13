@@ -3,26 +3,10 @@ import './studentProfile.css';
 import { getProfile, getStudentById } from '../../services/authAPI';
 import { useParams } from 'react-router-dom';
 
-// Dummy data representing the student profile (fallback)
-const defaultStudent = {
-  name: 'Aisha Sharma',
-  email: 'aisha.sharma@example.com',
-  yearSem: '3rd Year, 6th Sem',
-  cgpa: 9.15,
-  department: 'Computer Science',
-  backlogs: 0,
-  intern_details: 'Completed a 3-month remote internship at DataWave Analytics focusing on predictive modeling using Python and TensorFlow. Successfully reduced error rates by 15%.',
-  resume_url: 'https://cloud-storage/aisha_sharma_resume.pdf',
-  skills: ['Python', 'Data Structures & Algorithms', 'React', 'Node.js', 'MongoDB', 'AWS'],
-  interests: ['Web Development', 'Cloud Computing', 'Competitive Coding'],
-  role: 'student',
-};
-
-// Helper function to render skill/interest tags
 const renderTags = (tags, type) => (
   <div className="tags-container">
-    {tags.map((tag, index) => (
-      <span key={index} className={`tag tag-${type}`}>
+    {tags.map((tag, idx) => (
+      <span key={idx} className={`tag tag-${type}`}>
         {tag}
       </span>
     ))}
@@ -31,61 +15,70 @@ const renderTags = (tags, type) => (
 
 const StudentProfile = () => {
   const { id } = useParams();
-  const [profile, setProfile] = useState(defaultStudent);
+  const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let mounted = true;
-    const controller = new AbortController();
+
     const fetchProfile = async (_id) => {
       setLoading(true);
       try {
         let res;
-        // if an :id param is present, fetch that student's profile
-        if (id) {
+        if (_id) {
           res = await getStudentById(_id);
         } else {
           res = await getProfile();
         }
-
         const data = res?.data ?? res;
         if (mounted && data) {
           const profileData = data.data || data || {};
           setProfile(prev => ({ ...prev, ...profileData }));
         }
       } catch (err) {
-        console.error('Failed to load profile', err);
         if (mounted) setError(err?.response?.data?.message || err?.message || 'Failed to load profile');
       } finally {
         if (mounted) setLoading(false);
       }
     };
 
-    fetchProfile();
-
-    return () => {
-      mounted = false;
-      controller.abort();
-    };
+    fetchProfile(id);
+    return () => { mounted = false; };
   }, [id]);
 
+  if (loading) return <div className="student-profile-container"><p className="loading-text">Loading profile...</p></div>;
+  if (error) return <div className="student-profile-container"><p className="error-text">{error}</p></div>;
+
   const studentData = profile;
+  const handleLogout = async () => {
+  try {
+    // Optional: if you have a backend logout endpoint
+    // await API.post("/logout");
+
+    // Remove token and user data from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+ 
+    // Redirect to login page
+    window.location.href = "/";
+  } catch (error) {
+    console.error("Logout failed", error);
+  }
+};
 
   return (
     <div className="student-profile-container">
       <div className="profile-card">
-        {loading && <p>Loading profile...</p>}
-        {error && <p className="error-text">{error}</p>}
-
-        {/* Header Section */}
         <header className="profile-header">
           <h1 className="profile-name">{studentData.name}</h1>
           <p className="profile-department">{studentData.department}</p>
           <p className="profile-semester">{studentData.yearSem}</p>
-        </header>
 
-        {/* Core Academic Stats */}
+        </header>
+      <div className="info-section">
+    <span className="info-value1">{studentData.rollnumber}</span>
+  </div>
         <div className="stats-grid">
           <div className="stat-item cgpa">
             <span className="stat-label">CGPA</span>
@@ -97,43 +90,40 @@ const StudentProfile = () => {
           </div>
         </div>
 
-        {/* Contact and Resume */}
         <div className="info-group">
           <div className="info-section">
             <span className="info-label">Email:</span>
             <span className="info-value">{studentData.email}</span>
           </div>
-          <div className="info-section">
-            <span className="info-label">Resume:</span>
-            <a 
-              href={studentData.resume_url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="info-value resume-link"
-            >
-              View Resume
-            </a>
-          </div>
+          {studentData.resume_url && (
+            <div className="info-section">
+              <span className="info-label">Resume:</span>
+              <a href={studentData.resume_url} target="_blank" rel="noopener noreferrer" className="info-value resume-link">
+                View Resume
+              </a>
+            </div>
+          )}
         </div>
 
-        {/* Internship Details */}
         <div className="details-section">
           <h2>Internship Details</h2>
-          <p className="intern-details-content">{studentData.intern_details || "No formal internship details provided yet."}</p>
+          <p className="intern-details-content">{studentData.intern_details || "No internship details provided."}</p>
         </div>
 
-        {/* Skills */}
         <div className="details-section">
           <h2>Key Skills ({(studentData.skills || []).length})</h2>
           {renderTags(studentData.skills || [], 'skill')}
         </div>
 
-        {/* Interests */}
         <div className="details-section">
           <h2>Interests ({(studentData.interests || []).length})</h2>
           {renderTags(studentData.interests || [], 'interest')}
         </div>
-        
+              <div className="profile-actions">
+  <button className="action-btn logout-btn" onClick={handleLogout}>
+    Logout
+  </button>
+</div>
       </div>
     </div>
   );

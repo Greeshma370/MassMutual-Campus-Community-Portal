@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import for navigation
 import './registerManagement.css';
 import API from '../../services/api';
 
 const ManagementRegistration = () => {
+  const navigate = useNavigate(); // Initialize navigate
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,28 +18,17 @@ const ManagementRegistration = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // Clear error for the current field as the user types
-    if (errors[e.target.name]) {
-      setErrors({ ...errors, [e.target.name]: null });
-    }
+    if (errors[e.target.name]) setErrors({ ...errors, [e.target.name]: null });
   };
 
   const validate = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Name is required.';
-    if (!formData.email) {
-      newErrors.email = 'Email is required.';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email address is invalid.';
-    }
-    if (!formData.password) {
-      newErrors.password = 'Password is required.';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters.';
-    }
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match.';
-    }
+    if (!formData.email) newErrors.email = 'Email is required.';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email address is invalid.';
+    if (!formData.password) newErrors.password = 'Password is required.';
+    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters.';
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match.';
     return newErrors;
   };
 
@@ -49,29 +41,19 @@ const ManagementRegistration = () => {
       setIsSubmitting(true);
       setMessage('');
 
-      const payload = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        role: 'management', // Fixed role as per schema
-      };
+      const payload = { ...formData, role: 'management' };
 
       try {
-        console.log('Posting management payload to /api/management', payload);
         const res = await API.post('/management', payload);
-
         if (res?.data?.success) {
           setMessage('✅ Management user registered successfully!');
           setFormData({ name: '', email: '', password: '', confirmPassword: '' });
           setErrors({});
         } else {
-          const serverMsg = res?.data?.message || 'Registration failed';
-          setMessage(serverMsg);
+          setMessage(res?.data?.message || 'Registration failed');
         }
       } catch (err) {
-        console.error('Error registering management user:', err);
-        const serverMsg = err?.response?.data?.message || err.message || 'Server error';
-        setMessage(serverMsg);
+        setMessage(err?.response?.data?.message || err.message || 'Server error');
       } finally {
         setIsSubmitting(false);
       }
@@ -81,81 +63,91 @@ const ManagementRegistration = () => {
   };
 
   return (
-    <div className="registration-container">
-      <form className="registration-form" onSubmit={handleSubmit}>
+    <div className="registration-page">
+      <div className="registration-card">
         <h2 className="form-title">Register Management User</h2>
-        <p className="form-role-info">Role: **Management** (Fixed and immutable)</p>
+        <p className="form-role-info">Role: <strong>Management</strong> (Fixed and immutable)</p>
 
-        {message && <div className={`message ${message.startsWith('✅') ? 'success' : 'error'}`}>{message}</div>}
+        {message && (
+          <div className={`message ${message.startsWith('✅') ? 'success' : 'error'}`}>
+            {message}
+          </div>
+        )}
 
-        {/* Name Field */}
-        <div className="form-group">
-          <label htmlFor="name">Full Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter full name"
-            className={errors.name ? 'input-error' : ''}
-            disabled={isSubmitting}
-          />
-          {errors.name && <p className="error-text">{errors.name}</p>}
-        </div>
+        <form className="registration-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="name">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter full name"
+              className={errors.name ? 'input-error' : ''}
+              disabled={isSubmitting}
+            />
+            {errors.name && <p className="error-text">{errors.name}</p>}
+          </div>
 
-        {/* Email Field */}
-        <div className="form-group">
-          <label htmlFor="email">Email Address</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Enter professional email"
-            className={errors.email ? 'input-error' : ''}
-            disabled={isSubmitting}
-          />
-          {errors.email && <p className="error-text">{errors.email}</p>}
-        </div>
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter professional email"
+              className={errors.email ? 'input-error' : ''}
+              disabled={isSubmitting}
+            />
+            {errors.email && <p className="error-text">{errors.email}</p>}
+          </div>
 
-        {/* Password Field */}
-        <div className="form-group">
-          <label htmlFor="password">Password (min 6 chars)</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Create password"
-            className={errors.password ? 'input-error' : ''}
-            disabled={isSubmitting}
-          />
-          {errors.password && <p className="error-text">{errors.password}</p>}
-        </div>
+          <div className="form-group">
+            <label htmlFor="password">Password (min 6 chars)</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Create password"
+              className={errors.password ? 'input-error' : ''}
+              disabled={isSubmitting}
+            />
+            {errors.password && <p className="error-text">{errors.password}</p>}
+          </div>
 
-        {/* Confirm Password Field */}
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            placeholder="Confirm password"
-            className={errors.confirmPassword ? 'input-error' : ''}
-            disabled={isSubmitting}
-          />
-          {errors.confirmPassword && <p className="error-text">{errors.confirmPassword}</p>}
-        </div>
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm password"
+              className={errors.confirmPassword ? 'input-error' : ''}
+              disabled={isSubmitting}
+            />
+            {errors.confirmPassword && <p className="error-text">{errors.confirmPassword}</p>}
+          </div>
 
-        <button type="submit" className="submit-btn" disabled={isSubmitting}>
-          {isSubmitting ? 'Registering...' : 'Register Management'}
+          <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            {isSubmitting ? 'Registering...' : 'Register Management'}
+          </button>
+        </form>
+
+        {/* Back to Login */}
+        <button
+          className="back-login-btn"
+          onClick={() => navigate('/login/management')}
+        >
+          Back to Login
         </button>
-      </form>
+      </div>
     </div>
   );
 };

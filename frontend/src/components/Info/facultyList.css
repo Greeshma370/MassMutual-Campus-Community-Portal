@@ -1,46 +1,182 @@
-.faculty-list-container {
-  padding: 20px;
-  max-width: 1000px;
+/* ===========================
+   PROFESSIONAL FACULTY LIST
+=========================== */
+
+body {
+  background-color: #f5f7fb;
+  font-family: "Poppins", sans-serif;
+}
+
+.faculty-list-wrapper {
+  padding: 40px 20px;
+  max-width: 1300px;
   margin: auto;
-}
-
-.faculty-list-title {
-  font-size: 24px;
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
 }
 
+.faculty-heading {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.faculty-heading::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #007bff, #00b4d8);
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+/* ============ SEARCH BAR ============ */
+.faculty-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  position: relative;
+  max-width: 400px;
+  margin-inline: auto;
+}
+
+.faculty-search input {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  border-radius: 30px;
+  border: 1.5px solid #ccc;
+  font-size: 1rem;
+  transition: 0.3s ease;
+  background-color: #fff;
+}
+
+.faculty-search input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  color: #007bff;
+  font-size: 18px;
+}
+
+/* ============ GRID LAYOUT ============ */
 .faculty-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 25px;
 }
 
+/* ============ CARD DESIGN ============ */
 .faculty-card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff;
+  border: 1px solid rgba(0, 123, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  padding: 25px 20px;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .faculty-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  border-color: #007bff;
+  box-shadow: 0 12px 28px rgba(0, 123, 255, 0.1);
 }
 
+/* Circle Icon */
+.faculty-icon {
+  background: linear-gradient(135deg, #007bff, #00b4d8);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 28px;
+}
+
+/* Name and Role */
 .faculty-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #222;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 4px;
 }
 
-.faculty-email,
-.faculty-department,
 .faculty-role {
-  margin: 4px 0;
-  font-size: 14px;
+  font-size: 0.95rem;
+  color: #007bff;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+/* Info Section */
+.faculty-info p {
+  font-size: 0.9rem;
   color: #555;
+  margin: 6px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.3s ease;
+}
+
+.faculty-info p:hover {
+  color: #007bff;
+}
+
+/* Empty Message */
+.no-faculty-msg {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #777;
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+/* ============ RESPONSIVENESS ============ */
+@media (max-width: 768px) {
+  .faculty-heading {
+    font-size: 1.8rem;
+  }
+
+  .faculty-card {
+    padding: 20px;
+  }
+
+  .faculty-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .faculty-name {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .faculty-list-wrapper {
+    padding: 20px 10px;
+  }
+
+  .faculty-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .faculty-search {
+    max-width: 100%;
+  }
 }

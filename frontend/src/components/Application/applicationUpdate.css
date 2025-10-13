@@ -1,10 +1,13 @@
-/* General Layout */
+/* --- GENERAL BODY STYLES --- */
 body {
     background-color: #f4f7f9;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #333;
+    margin: 0;
+    padding: 0;
 }
 
+/* --- CONTAINER AND HEADING --- */
 .applications-list-container {
     max-width: 1200px;
     margin: 40px auto;
@@ -14,35 +17,64 @@ body {
 .applications-title {
     text-align: center;
     font-size: 2.5em;
-    color: #2c3e50;
-    margin-bottom: 30px;
+    color: white;
+    margin-bottom: 20px;
     font-weight: 700;
 }
 
-.no-applications-message {
-    text-align: center;
-    font-size: 1.2em;
-    color: #777;
-    padding: 50px 20px;
-    background-color: #eef1f3;
-    border-radius: 8px;
-    margin-top: 30px;
+/* --- BACK TO HOME BUTTON --- */
+.back-home-btn {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 20px;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-/* Sorting Controls */
-.sort-controls {
+.back-home-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+/* --- SEARCH AND SORT CONTROLS --- */
+.controls-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Allows wrapping on small screens */
+    flex-wrap: wrap;
     gap: 15px;
     margin-bottom: 25px;
-    font-size: 1.1em;
-    font-weight: 500;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-bar-container {
+    flex: 1;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.search-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
+    outline: none;
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1em;
+    color: white;
 }
 
 .sort-btn {
@@ -51,11 +83,8 @@ body {
     padding: 8px 15px;
     border-radius: 20px;
     cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
     font-weight: 600;
+    transition: all 0.3s;
 }
 
 .sort-btn:hover {
@@ -69,22 +98,23 @@ body {
     box-shadow: 0 2px 4px rgba(52, 152, 219, 0.4);
 }
 
-/* Application Card */
+/* --- APPLICATION CARD GRID --- */
 .application-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 25px;
 }
 
+/* --- APPLICATION CARD --- */
 .application-card {
     background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .application-card:hover {
@@ -92,6 +122,7 @@ body {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
+/* --- CARD HEADER: STUDENT + STATUS --- */
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -109,20 +140,21 @@ body {
     color: #333;
 }
 
+/* --- STATUS SELECTOR --- */
 .status-selector {
-    padding: 6px 10px;
-    border-radius: 20px;
+    padding: 6px 12px;
+    border-radius: 25px;
     font-size: 0.9em;
     font-weight: bold;
     text-transform: uppercase;
     cursor: pointer;
     border: 1px solid transparent;
-    appearance: none; /* Remove default dropdown arrow */
-    text-align: center;
     min-width: 150px;
+    text-align: center;
+    appearance: none;
 }
 
-/* Status-specific colors for the select dropdown */
+/* Status-specific colors */
 .status-selector-pending {
     background-color: #fff3cd;
     color: #856404;
@@ -149,6 +181,7 @@ body {
     border-color: #6c757d;
 }
 
+/* --- JOB INFO --- */
 .job-title {
     font-size: 1.4em;
     color: #007bff;
@@ -178,6 +211,36 @@ body {
     margin-bottom: 15px;
 }
 
+/* --- ROUND STATUS UPDATER --- */
+.rounds-update {
+    margin-bottom: 15px;
+    background-color: #f7f9fc;
+    border-radius: 10px;
+    padding: 10px 15px;
+}
+
+.round-status-updater {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.round-status-updater label {
+    font-weight: 500;
+    color: #333;
+    margin-right: 10px;
+}
+
+.round-status-updater select {
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+/* --- FACULTY NOTES --- */
 .faculty-notes {
     background-color: #f8f8ff;
     border-left: 3px solid #6c757d;
@@ -187,20 +250,46 @@ body {
     font-size: 0.9em;
     color: #555;
     line-height: 1.4;
-    flex-grow: 1; /* Make notes fill available space */
 }
 
-/* Responsive adjustments */
+/* --- NO APPLICATION MESSAGE --- */
+.no-applications-message {
+    text-align: center;
+    font-size: 1.2em;
+    color: #777;
+    padding: 50px 20px;
+    background-color: #eef1f3;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+/* --- ERROR TEXT --- */
+.error-text {
+    text-align: center;
+    color: #dc3545;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
     .application-cards-grid {
         grid-template-columns: 1fr;
     }
-    .sort-controls {
+    .controls-container {
         flex-direction: column;
         align-items: stretch;
     }
+    .sort-controls {
+        justify-content: center;
+    }
     .sort-controls span {
+        width: 100%;
         text-align: center;
         margin-bottom: 10px;
+    }
+    .back-home-btn {
+        width: 100%;
+        text-align: center;
     }
 }

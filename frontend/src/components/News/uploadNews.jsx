@@ -6,7 +6,8 @@ import { useAuth } from "../../context/AuthContext";
 
 export default function NewsForm() {
   const navigate = useNavigate();
-  const Auth=useAuth()
+  const Auth = useAuth();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("news");
@@ -29,100 +30,111 @@ export default function NewsForm() {
       title: title.trim(),
       description: description.trim(),
       type,
-      // only send eventDate if the user provided one
       ...(eventDate ? { eventDate } : {}),
     };
 
     setLoading(true);
     try {
-      const res=createNews(payload)
-      console.log(res)
-
-      setSuccess("Posted successfully.");
+      await createNews(payload);
+      setSuccess("✅ Posted successfully!");
       setTitle("");
       setDescription("");
       setType("news");
       setEventDate("");
-      // navigate back to a dashboard or list if desired:
-      // navigate("/dashboard/faculty");
-      if (Auth.role=='faculty'){
-        navigate("/dashboard/faculty")
-      }
-      else{
-        navigate("/dashboard/management")
-      }
+
+      setTimeout(() => {
+        if (Auth.role === "faculty") {
+          navigate("/dashboard/faculty");
+        } else {
+          navigate("/dashboard/management");
+        }
+      }, 1000);
     } catch (err) {
-      setError(err.message || "Failed to post news/event.");
+      setError(err?.response?.data?.message || "❌ Failed to post news/event.");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleReset = () => {
+    setTitle("");
+    setDescription("");
+    setType("news");
+    setEventDate("");
+    setError(null);
+    setSuccess(null);
+  };
+
   return (
-    <form className="news-form" onSubmit={handleSubmit}>
-      <h3>Create News / Event / Drive</h3>
+    <div className="upload-news-container">
+      <form className="news-form" onSubmit={handleSubmit}>
+        <h2>Create News / Event / Drive</h2>
+      <button
+        type="button"
+        className="close-btn1"
+        onClick={() => {
+          if (Auth.role === "faculty") {
+            navigate("/dashboard/faculty");
+          } else {
+            navigate("/dashboard/management");
+          }
+        }}
+      >
+        X
+      </button>
+        {error && <div className="nf-message nf-error">{error}</div>}
+        {success && <div className="nf-message nf-success">{success}</div>}
 
-      {error && <div className="nf-error">{error}</div>}
-      {success && <div className="nf-success">{success}</div>}
+        <label>
+          Title  *
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter title"
+            required
+          />
+        </label>
 
-      <label>
-        Title
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter title"
-          required
-        />
-      </label>
+        <label>
+          Description *
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Write a brief description..."
+            rows={5}
+            required
+          />
+        </label>
 
-      <label>
-        Description
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter description"
-          rows={6}
-          required
-        />
-      </label>
+        <div className="form-row">
+          <label>
+            Type
+            <select value={type} onChange={(e) => setType(e.target.value)}>
+              <option value="news">News</option>
+              <option value="event">Event</option>
+              <option value="drive">Drive</option>
+            </select>
+          </label>
 
-      <label className="nf-inline">
-        Type
-        <select value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="news">News</option>
-          <option value="event">Event</option>
-          <option value="drive">Drive</option>
-        </select>
-      </label>
+          <label>
+            Event Date
+            <input
+              type="date"
+              value={eventDate}
+              onChange={(e) => setEventDate(e.target.value)}
+            />
+          </label>
+        </div>
 
-      <label>
-        Event Date (optional)
-        <input
-          type="date"
-          value={eventDate}
-          onChange={(e) => setEventDate(e.target.value)}
-        />
-      </label>
-
-      <div className="nf-actions">
-        <button type="submit" className="btn primary" disabled={loading}>
-          {loading ? "Posting..." : "Post"}
-        </button>
-        <button
-          type="button"
-          className="btn outline"
-          onClick={() => {
-            setTitle("");
-            setDescription("");
-            setType("news");
-            setEventDate("");
-            setError(null);
-            setSuccess(null);
-          }}
-        >
-          Reset
-        </button>
-      </div>
-    </form>
+        <div className="nf-actions">
+          <button type="submit" className="btn primary" disabled={loading}>
+            {loading ? "Posting..." : "Post"}
+          </button>
+          <button type="button" className="btn secondary" onClick={handleReset}>
+            Reset
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

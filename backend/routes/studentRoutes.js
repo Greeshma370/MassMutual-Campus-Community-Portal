@@ -10,6 +10,7 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   const { 
     name, 
+    rollnumber,
     email, 
     password, 
     yearSem, 
@@ -35,6 +36,7 @@ router.post("/register", async (req, res) => {
     // Create student with all fields
     const student = await Student.create({
       name,
+      rollnumber,
       email,
       password,
       yearSem,
@@ -54,6 +56,7 @@ router.post("/register", async (req, res) => {
         data: {
           _id: student._id,
           name: student.name,
+          rollnumber: student.rollnumber,
           email: student.email,
           yearSem: student.yearSem,
           department: student.department,

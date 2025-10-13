@@ -151,8 +151,14 @@ const JobList = () => {
                     </button>
                     
           {(hoveredCardId === job._id) && (
-            <div className="job-actions">
-              <button className="action-btn delete-btn" onClick={() => handleDelete(job._id)}>
+            <div className="job-actions1" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+               <button
+                   className="action-btn edit-btn"
+                   onClick={() => navigate(`/jobs/edit/${job._id}`, { state: { job } })}
+                >
+                 Edit
+               </button>
+               <button className="action-btn delete-btn1" onClick={() => handleDelete(job._id)}>
                 Delete
               </button>
             </div>
@@ -162,10 +168,10 @@ const JobList = () => {
               
               <p className="job-card-company">{job.companyName}</p>
               <p className="job-card-location">
-                <span className="icon">📍</span> {job.location || 'N/A'}
+                <span className="icon">Location:</span> {job.location || 'N/A'}
               </p>
               <p className="job-card-salary">
-                <span className="icon">💰</span> {job.salaryPackage || 'Negotiable'}
+                <span className="icon">Salary:</span> {job.salaryPackage || 'Negotiable'}
               </p>
               <div className="job-card-eligibility">
                 <strong>Eligibility:</strong>
@@ -188,8 +194,6 @@ const JobList = () => {
               </p>
               <p className="job-card-description">{job.description.substring(0, 120)}...</p> 
               
-              {/* This button is for the student to view details/apply */}
-              <button className="job-card-button">View Details</button>
             </div>
           ))}
         </div>

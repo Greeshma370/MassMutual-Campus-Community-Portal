@@ -5,9 +5,11 @@ import Footer from '../components/footer/Footer';
 
 export default function StudentDashboard() {
   return (
-    <div>
-      <HeaderStudent />
-      <News />
+    <div className="page-container">
+      <div className="main-content">
+        <HeaderStudent />
+        <News />
+      </div>
       <Footer />
     </div>
   );

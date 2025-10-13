@@ -1,0 +1,217 @@
+/* Main Background */
+.analysis-root {
+  padding: 2rem;
+  background: linear-gradient(135deg, #106dbe 0%, #43c6ac 85%);
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  color: #1d3557;
+  letter-spacing: 0.01rem;
+}
+.analysis-root h2 {
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-bottom: 1.4rem;
+  color: #ffffff;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+}
+/* Summary Cards - Responsive Grid */
+.summary-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  justify-content: space-between;
+}
+.card {
+  background: linear-gradient(135deg, #f1f7ff, #dae9fa 80%);
+  border-radius: 10px;
+  padding: 1.4rem 1.2rem;
+  flex: 1 1 180px;
+  min-width: 190px;
+  max-width: 340px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(46, 119, 212, 0.07);
+  border: 2px solid #e6ecfa;
+  color: #1d3557;
+  margin-top: 0.8rem;
+}
+.card h3 {
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.card p {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #0073e6;
+}
+
+/* Filters and Controls */
+.analysis-controls {
+  margin-bottom: 1.2rem;
+  padding: 1.1rem;
+  background: #f2f7fc;
+  border-radius: 9px;
+  box-shadow: 0 1px 6px rgba(46, 119, 212, 0.09);
+}
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  align-items: center;
+  margin-bottom: 0.9rem;
+  background: #f2f6fc;
+  border-radius: 9px;
+  padding: 0.8rem;
+}
+.filter-row input, .filter-row select {
+  min-width: 130px;
+  width: auto;
+  padding: 0.53rem 0.85rem;
+  border-radius: 6.5px;
+  border: 1px solid #bcd0ee;
+  background: #fff;
+  font-size: 1rem;
+}
+.filter-row button {
+  padding: 0.6rem 1.07rem;
+  border-radius: 7px;
+  border: none;
+  background: #0073e6;
+  color: #fff;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.filter-row button:hover {
+  background: #0054a0;
+}
+
+/* Table Containers */
+.agg-table-container, .table-container {
+  background: #fff;
+  padding: 1.15rem;
+  border-radius: 11px;
+  box-shadow: 0 6px 20px rgba(46, 119, 212, 0.08);
+  margin-bottom: 1.2rem;
+  overflow-x: auto;
+}
+.agg-table, .apps-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+.agg-table th, .agg-table td, .apps-table th, .apps-table td {
+  padding: 0.68rem 0.8rem;
+  border-bottom: 1px solid #e4ebf6;
+  text-align: left;
+  transition: background 0.11s;
+  font-size: 0.96rem;
+  word-break: break-word;
+}
+.agg-table tbody tr:nth-child(odd), .apps-table tbody tr:nth-child(even) {
+  background: #f8fbff;
+}
+.agg-table tbody tr:hover, .apps-table tbody tr:hover {
+  background: #e2eeff;
+}
+.agg-table thead th, .apps-table thead th {
+  background: #eaf4fd;
+  font-weight: 700;
+  font-size: 1.03rem;
+  color: #2162b7;
+  border-top: 1px solid #b3c7e6;
+  border-bottom: 2px solid #deebf7;
+}
+.apps-table th, .apps-table td {
+  color: #294170;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  align-items: center;
+  margin-top: 0.55rem;
+}
+.pagination button {
+  padding: 0.48rem 0.8rem;
+  border-radius: 6.5px;
+  border: 1px solid #dde8fc;
+  background: #f6faff;
+  font-weight: 500;
+  font-size: 0.97rem;
+}
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Charts - Responsive Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.3rem;
+}
+.chart-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.25rem 0.9rem;
+  box-shadow: 0 4px 12px rgba(30, 80, 170, 0.07);
+  min-height: 354px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+}
+.chart-card h4 {
+  margin-bottom: 0.82rem;
+  color: #24639a;
+  font-size: 1.13rem;
+  font-weight: 700;
+}
+
+.notes {
+  margin-top: 1.3rem;
+  font-size: 1.02rem;
+  color: #226;
+}
+.error {
+  color: #d92d38;
+  margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1100px) {
+  .chart-card { min-height: 320px; }
+}
+
+@media (max-width: 950px) {
+  .summary-cards { flex-direction: column; }
+  .card { max-width: unset; min-width: unset; margin-top: 1.1rem; }
+}
+@media (max-width: 700px) {
+  .analysis-root { padding: 0.6rem; }
+  .agg-table-container, .table-container { padding: .4rem; border-radius: 7px; }
+  .chart-card { padding: 0.9rem 0.3rem; }
+}
+@media (max-width: 600px) {
+  .filter-row { gap: 0.3rem; padding: 0.4rem; }
+  .agg-table, .apps-table { font-size: 0.91rem; }
+  .summary-cards { gap: 0.7rem; }
+}
+
+/* Make tables scroll horizontally if too wide */
+.agg-table-container, .table-container {
+  overflow-x: auto;
+}
+
+/* Make filter select/inputs stack on very small screens */
+@media (max-width: 490px) {
+  .filter-row { flex-direction: column; align-items: stretch; }
+  .filter-row select, .filter-row input { width: 100%; min-width: 96px; margin-bottom: 3px; }
+}

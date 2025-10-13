@@ -1,45 +1,183 @@
-.management-list-container {
-  padding: 20px;
-  max-width: 800px;
+/* =====================================
+   PROFESSIONAL MANAGEMENT LIST DESIGN
+===================================== */
+
+body {
+  background-color: #f9f6f1;
+  font-family: "Poppins", sans-serif;
+}
+
+.management-wrapper {
+  padding: 40px 20px;
+  max-width: 1300px;
   margin: auto;
-}
-
-.management-list-title {
-  font-size: 24px;
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
 }
 
+/* ============ HEADING ============ */
+.management-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.management-title::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #e67e22, #f1c40f);
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+/* ============ SEARCH BAR ============ */
+.management-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  position: relative;
+  max-width: 400px;
+  margin-inline: auto;
+}
+
+.management-search input {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  border-radius: 30px;
+  border: 1.5px solid #ccc;
+  font-size: 1rem;
+  transition: 0.3s ease;
+  background-color: #fff;
+}
+
+.management-search input:focus {
+  outline: none;
+  border-color: #e67e22;
+  box-shadow: 0 0 6px rgba(230, 126, 34, 0.3);
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  color: #e67e22;
+  font-size: 18px;
+}
+
+/* ============ GRID ============ */
 .management-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 25px;
 }
 
+/* ============ CARD DESIGN ============ */
 .management-card {
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(230, 126, 34, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  padding: 25px 20px;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .management-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  border-color: #e67e22;
+  box-shadow: 0 12px 28px rgba(230, 126, 34, 0.15);
 }
 
+/* Crown Icon */
+.management-icon {
+  background: linear-gradient(135deg, #e67e22, #f1c40f);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 28px;
+}
+
+/* Name and Role */
 .management-name {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 8px;
-  color: #222;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 4px;
 }
 
-.management-email,
 .management-role {
-  margin: 4px 0;
-  font-size: 14px;
+  font-size: 0.95rem;
+  color: #e67e22;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+/* Info Section */
+.management-info p {
+  font-size: 0.9rem;
   color: #555;
+  margin: 6px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.3s ease;
+}
+
+.management-info p:hover {
+  color: #e67e22;
+}
+
+/* Empty Message */
+.no-management-msg {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #777;
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+/* ============ RESPONSIVENESS ============ */
+@media (max-width: 768px) {
+  .management-title {
+    font-size: 1.8rem;
+  }
+
+  .management-card {
+    padding: 20px;
+  }
+
+  .management-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .management-name {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .management-wrapper {
+    padding: 20px 10px;
+  }
+
+  .management-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .management-search {
+    max-width: 100%;
+  }
 }

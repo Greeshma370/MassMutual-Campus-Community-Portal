@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./managementProfile.css";
+import './managementProfile.css';
 import { getProfile, getManagementById } from "../../services/authAPI";
 import { useParams } from "react-router-dom";
 
 const defaultManagement = {
   name: "John Doe",
   email: "john.doe@massmutual.edu",
-  role: "management",
+  role: "Super Admin",
 };
 
 const ManagementProfile = () => {
@@ -23,26 +23,17 @@ const ManagementProfile = () => {
       setLoading(true);
       try {
         let res;
-        // If an :id param is present, fetch that management's profile
-        if (_id) {
-          res = await getManagementById(_id);
-        } else {
-          res = await getProfile(); // fallback to logged-in management
-        }
+        if (_id) res = await getManagementById(_id);
+        else res = await getProfile();
 
         const data = res?.data ?? res;
         if (mounted && data) {
           const profileData = data.data || data || {};
-          setProfile((prev) => ({ ...prev, ...profileData }));
+          setProfile(prev => ({ ...prev, ...profileData }));
         }
       } catch (err) {
-        console.error("Failed to load management profile", err);
-        if (mounted)
-          setError(
-            err?.response?.data?.message ||
-              err?.message ||
-              "Failed to load profile"
-          );
+        console.error("Failed to load profile", err);
+        if (mounted) setError(err?.response?.data?.message || err?.message || "Failed to load profile");
       } finally {
         if (mounted) setLoading(false);
       }
@@ -56,20 +47,42 @@ const ManagementProfile = () => {
     };
   }, [id]);
 
-  const managementData = profile;
+  const handleEdit = () => alert("Edit profile clicked");
+ const handleLogout = () => {
+  // remove token and user data from localStorage
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+
+  // redirect to login page
+  window.location.href = "/";
+};
+
+
+  const firstLetter = profile.name ? profile.name.charAt(0).toUpperCase() : "M";
 
   return (
-    <div className="management-profile-container">
+    <div className="management-profile-wrapper">
       <div className="management-profile-card">
-        {loading && <p>Loading profile...</p>}
+        {loading && <p className="loading-text">Loading profile...</p>}
         {error && <p className="error-text">{error}</p>}
 
         {!loading && !error && (
           <>
-            <header className="profile-header">
-              <h1 className="profile-name">{managementData.name}</h1>
-              <p className="profile-email">{managementData.email}</p>
-            </header>
+            <div className="profile-avatar">{firstLetter}</div>
+            <div className="profile-header">
+              <h1 className="profile-name">{profile.name}</h1>
+              {profile.role.toLowerCase() === "super admin" && (
+                <span className="super-admin-badge">SUPER ADMIN</span>
+              )}
+              <p className="profile-role">{profile.role}</p>
+              <p className="profile-email">{profile.email}</p>
+            </div>
+
+            <div className="profile-actions">
+               <button className="action-btn logout-btn" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
           </>
         )}
       </div>

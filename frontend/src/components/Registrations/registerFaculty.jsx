@@ -5,10 +5,11 @@ import API from '../../services/api';
 const FacultyRegistration = () => {
   const [formData, setFormData] = useState({
     name: '',
+    emp_id: '',
     email: '',
     password: '',
     confirmPassword: '',
-    department: '', // New field required for faculty
+    department: '',
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,7 +17,6 @@ const FacultyRegistration = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // Clear error for the current field as the user types
     if (errors[e.target.name]) {
       setErrors({ ...errors, [e.target.name]: null });
     }
@@ -25,6 +25,7 @@ const FacultyRegistration = () => {
   const validate = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Name is required.';
+    if (!formData.emp_id.trim()) newErrors.emp_id = 'Employee ID is required.';
     if (!formData.department.trim()) newErrors.department = 'Department is required.';
 
     if (!formData.email) {
@@ -32,16 +33,17 @@ const FacultyRegistration = () => {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email address is invalid.';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Password is required.';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters.';
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match.';
     }
+
     return newErrors;
   };
 
@@ -56,23 +58,29 @@ const FacultyRegistration = () => {
 
       const payload = {
         name: formData.name,
+        emp_id: formData.emp_id,
         email: formData.email,
         password: formData.password,
         department: formData.department,
-        role: 'faculty', // Fixed role as per schema
+        role: 'faculty',
       };
 
       try {
-        console.log('Posting faculty payload to /api/faculty', payload);
+        console.log('Posting faculty payload to /faculty:', payload);
         const res = await API.post('/faculty', payload);
 
-        // Backend returns { success: true, data: faculty } on success
         if (res?.data?.success) {
-          setMessage('✅ Faculty user registered successfully!');
-          setFormData({ name: '', email: '', password: '', confirmPassword: '', department: '' });
+          setMessage('✅ Faculty registered successfully!');
+          setFormData({
+            name: '',
+            emp_id: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            department: '',
+          });
           setErrors({});
         } else {
-          // Backend may return success=false or a generic response
           const serverMsg = res?.data?.message || 'Registration failed';
           setMessage(serverMsg);
         }
@@ -91,10 +99,13 @@ const FacultyRegistration = () => {
   return (
     <div className="registration-container">
       <form className="registration-form" onSubmit={handleSubmit}>
-        <h2 className="form-title">Register Faculty User</h2>
-        <p className="form-role-info">Role: **Faculty** (Fixed and immutable)</p>
+        <h2 className="form-title">Register Placement Coordinator</h2>
 
-        {message && <div className={`message ${message.startsWith('✅') ? 'success' : 'error'}`}>{message}</div>}
+        {message && (
+          <div className={`message ${message.startsWith('✅') ? 'success' : 'error'}`}>
+            {message}
+          </div>
+        )}
 
         {/* Name Field */}
         <div className="form-group">
@@ -110,6 +121,22 @@ const FacultyRegistration = () => {
             disabled={isSubmitting}
           />
           {errors.name && <p className="error-text">{errors.name}</p>}
+        </div>
+
+        {/* Employee ID Field */}
+        <div className="form-group">
+          <label htmlFor="emp_id">Employee ID</label>
+          <input
+            type="text"
+            id="emp_id"
+            name="emp_id"
+            value={formData.emp_id}
+            onChange={handleChange}
+            placeholder="Enter employee ID"
+            className={errors.emp_id ? 'input-error' : ''}
+            disabled={isSubmitting}
+          />
+          {errors.emp_id && <p className="error-text">{errors.emp_id}</p>}
         </div>
 
         {/* Department Field */}

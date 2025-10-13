@@ -26,12 +26,14 @@ import JobsApply from './pages/JobsForyou.jsx';
 import ManagementNewsForm from './pages/ManagementNewsForm.jsx';
 import FacultyNewsForm from './pages/FacultyNewsForm.jsx';
 import JobsForm from './pages/JobsForm.jsx';
+import JobsEdit from './pages/JobsEdit.jsx';
+import FacultyAnalysis from './pages/AnalysisFaculty.jsx';
+import ManagementAnalysis from './pages/ManagementAnalysis.jsx';
 // Component Imports
 import RegisterStudent from './components/Registrations/registerStudent.jsx';
 import LoginStudent from './components/Registrations/loginStudent.jsx'; 
 import LoginFaculty from './components/Registrations/loginFaculty.jsx'; 
 import LoginManagement from './components/Registrations/loginManagement.jsx';
-import ManagementNewsAdd from './pages/ManagementNewsForm.jsx';
 
 // A component to protect routes
 function ProtectedRoute({ children }) {
@@ -110,10 +112,21 @@ function App() {
           path="/faculty/students" 
           element={<ProtectedRoute><FacultyStudents /></ProtectedRoute>} 
         />
-        
+        <Route 
+          path="/faculty/Analysis" 
+          element={<ProtectedRoute><FacultyAnalysis /></ProtectedRoute>} 
+        />
         <Route 
           path="/faculty/news/add" 
           element={<ProtectedRoute><FacultyNewsForm /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/jobs/edit" 
+          element={<ProtectedRoute><JobsEdit /></ProtectedRoute>} 
+        />
+        <Route 
+          path="/jobs/edit/:jobId" 
+          element={<ProtectedRoute><JobsEdit /></ProtectedRoute>} 
         />
         <Route 
           path="/dashboard/management" 
@@ -134,6 +147,10 @@ function App() {
         <Route 
           path="/management/applications" 
           element={<ProtectedRoute><ManagementApplications/></ProtectedRoute>} 
+        />
+        <Route 
+          path="/management/analysis" 
+          element={<ProtectedRoute><ManagementAnalysis/></ProtectedRoute>} 
         />
         <Route 
           path="/management/students" 

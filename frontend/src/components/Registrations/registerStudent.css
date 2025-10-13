@@ -1,69 +1,136 @@
-.register-container {
-  max-width: 550px;
-  margin: 2rem auto;
-  padding: 2.5rem;
-  background: linear-gradient(135deg, #ffffff, #f0f8ff);
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-  transition: transform 0.3s ease;
+/* ===========================
+   PROFESSIONAL STUDENT REGISTRATION PAGE
+=========================== */
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1f3c88, #1abc9c); /* Professional gradient */
 }
 
-.register-container:hover {
-  transform: translateY(-4px);
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
-.register-container h2 {
+.register-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
   text-align: center;
-  margin-bottom: 2rem;
-  font-size: 1.8rem;
-  color: #222;
-  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeInUp 0.7s ease-in-out;
 }
 
+.register-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.register-card h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 25px;
+}
+
+/* Form styling */
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 18px;
 }
 
 .register-form input,
 .register-form textarea {
-  padding: 0.85rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 15px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 14px 16px;
+  border: 1.5px solid #dcdcdc;
+  border-radius: 12px;
+  font-size: 1em;
   outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 .register-form input:focus,
 .register-form textarea:focus {
-  border-color: #0077ff;
-  box-shadow: 0 0 6px rgba(0, 119, 255, 0.3);
+  border-color: #16a085;
+  box-shadow: 0 0 0 3px rgba(22, 160, 133, 0.2);
 }
 
 .register-form textarea {
-  resize: vertical;
-  min-height: 80px;
+  resize: none;
+  height: 80px;
 }
 
-.register-form button {
-  padding: 1rem;
-  background: linear-gradient(135deg, #0077ff, #0056cc);
-  color: white;
+/* Register Button */
+.register-btn {
+  background: linear-gradient(135deg, #16a085, #1abc9c);
+  color: #fff;
   border: none;
   border-radius: 12px;
-  font-size: 16px;
-  font-weight: bold;
+  padding: 14px;
+  font-size: 1.05rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3);
+  margin-top: 5px;
 }
 
-.register-form button:hover {
-  background: linear-gradient(135deg, #0056cc, #003f99);
+.register-btn:hover {
+  background: linear-gradient(135deg, #1abc9c, #16a085);
   transform: translateY(-2px);
 }
 
-.register-form button:active {
-  transform: scale(0.98);
+/* Back to Login Button */
+.login-btn {
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 0.95rem;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #e2e2e2;
+  border-color: #999;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .register-card {
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-card h2 {
+    font-size: 1.6rem;
+  }
+
+  .register-form input,
+  .register-form textarea {
+    font-size: 0.95rem;
+  }
+
+  .register-btn,
+  .login-btn {
+    width: 100%;
+  }
 }

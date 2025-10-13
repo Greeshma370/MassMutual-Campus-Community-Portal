@@ -1,61 +1,166 @@
+/* =========================
+   GLOBAL FONT & BODY
+========================= */
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa; /* Clean single-color background */
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================
+   NEWS FORM CONTAINER
+========================= */
+.news-container {
+  max-width: 1100px;
+  margin: 3rem auto;
+  padding: 1rem;
+}
+
+.news-container h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.5px;
+}
+
+/* =========================
+   NEWS FORM
+========================= */
 .news-form {
   max-width: 720px;
-  margin: 1rem auto;
-  padding: 1.25rem;
-  background: #ffffff;
-  border: 1px solid #ececec;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+  margin: 0 auto 3rem auto;
+  padding: 2.6rem 2.2rem 2.2rem;
+  background: linear-gradient(145deg, #ffffff, #f0f4f8);
+  border-radius: 20px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.8rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative; /* Added for absolute positioning inside */
+}
+
+.news-form:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 .news-form h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.15rem;
-  color: #222;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 1.2rem;
+  text-align: center;
 }
 
+/* ===== CLOSE BUTTON ===== */
+.news-form {
+  position: relative; /* This is essential for absolute positioning of the close button */
+}
+
+.news-form .close-btn1 {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0b63a8;
+  border: 2px solid #0b63a8;
+  font-weight: 700;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(11, 99, 168, 0.12);
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  z-index: 100;
+}
+
+.news-form .close-btn1:hover,
+.news-form .close-btn1:focus {
+  background: #0b63a8;
+  color: #fff;
+  border-color: #0b63a8;
+  box-shadow: 0 8px 20px rgba(11, 99, 168, 0.18);
+}
+
+/* =========================
+   INPUT FIELDS
+========================= */
 .news-form label {
   display: flex;
   flex-direction: column;
   font-size: 0.95rem;
-  color: #333;
-  gap: 0.35rem;
+  color: #444;
+  gap: 0.5rem;
 }
 
 .news-form input[type="text"],
 .news-form input[type="date"],
 .news-form select,
 .news-form textarea {
-  padding: 0.6rem 0.75rem;
+  padding: 0.8rem 1rem;
   border: 1px solid #dcdcdc;
-  border-radius: 6px;
+  border-radius: 14px;
   font-size: 0.95rem;
   outline: none;
+  transition: all 0.25s ease;
+  background-color: #fafafa;
 }
 
-.news-form textarea { resize: vertical; }
+.news-form input:focus,
+.news-form select:focus,
+.news-form textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+  transform: scale(1.02);
+}
 
-.nf-inline { max-width: 260px; }
+.news-form textarea {
+  resize: vertical;
+  min-height: 130px;
+}
 
+.nf-inline {
+  max-width: 280px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
 .nf-actions {
   display: flex;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
 }
 
 .btn {
-  padding: 0.5rem 0.9rem;
-  border-radius: 6px;
+  padding: 0.7rem 1.3rem;
+  border-radius: 12px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
   border: 1px solid transparent;
+  transition: all 0.3s ease;
 }
 
 .btn.primary {
-  background: #007bff;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
   color: #fff;
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.3);
+}
+
+.btn.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 123, 255, 0.4);
 }
 
 .btn.outline {
@@ -64,18 +169,182 @@
   border-color: #007bff;
 }
 
+.btn.outline:hover {
+  background: #007bff;
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+/* =========================
+   MESSAGES
+========================= */
+.nf-error,
+.nf-success {
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  text-align: center;
+  font-weight: 500;
+}
+
 .nf-error {
-  color: #9b1c1c;
-  background: #fff1f0;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #f5c2c2;
+  color: #c62828;
+  background: #ffebee;
+  border: 1px solid #ef9a9a;
 }
 
 .nf-success {
-  color: #0b6623;
-  background: #ecf9ef;
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #c8e6c9;
+  color: #2e7d32;
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+}
+
+/* =========================
+   NEWS LIST CARDS
+========================= */
+.news-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.news-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+}
+
+.news-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+}
+
+.news-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.news-card h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  flex-grow: 1;
+  padding-right: 0.5rem;
+}
+
+.news-card p {
+  margin: 0.8rem 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.news-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  padding: 5px 14px;
+  border-radius: 24px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  transition: all 0.2s ease;
+}
+
+.tag.news { background: #e3f2fd; color: #1565c0; }
+.tag.event { background: #fff3e0; color: #ef6c00; }
+.tag.drive { background: #e8f5e9; color: #2e7d32; }
+
+/* =========================
+   ACTION BUTTONS WITH THREE DOTS
+========================= */
+.action-control-area {
+  position: relative;
+}
+
+.dots-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.news-actions-dropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+  z-index: 100;
+  min-width: 100px;
+}
+
+.news-actions-dropdown .action-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.news-actions-dropdown .action-btn:hover {
+  background: #f2f2f2;
+}
+
+.delete-btn {
+  color: #c62828;
+  font-weight: 600;
+}
+
+/* =========================
+   RESPONSIVENESS
+========================= */
+@media (max-width: 768px) {
+  .news-form,
+  .news-container {
+    padding: 1rem;
+  }
+
+  .news-list {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-card {
+    padding: 1rem;
+  }
+
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.8rem;
+  }
+
+  .news-form h3,
+  .news-container h2 {
+    font-size: 1.3rem;
+  }
 }

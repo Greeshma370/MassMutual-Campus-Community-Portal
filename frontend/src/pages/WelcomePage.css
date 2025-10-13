@@ -1,0 +1,178 @@
+/* ==============================
+   Base Layout
+============================== */
+.welcome-page {
+  background: linear-gradient(135deg, #1f3c88, #1abc9c);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==============================
+   Header
+============================== */
+header,
+.headerNologin {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  /* backdrop-filter: blur(10px); */
+}
+
+/* ==============================
+   Hero Section
+============================== */
+.hero-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 100px 20px 60px 20px;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+}
+
+.hero-content h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.hero-content h1 span {
+  color: #f5f5f5;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hero-content p {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  margin-bottom: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==============================
+   Buttons Group
+============================== */
+.button-group {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Universal Button Reset */
+.button-group button,
+.button-group .login-button,
+.button-group .register-button {
+  all: unset;
+  display: inline-block;
+  text-align: center;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  min-width: 160px;
+  padding: 14px 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Login Button (Blue) */
+.button-group .login-button,
+.button-group button:first-child {
+  background: #0056b3;
+  color: #fff;
+}
+
+.button-group .login-button:hover,
+.button-group button:first-child:hover {
+  background: #000f82;
+  transform: translateY(-3px);
+}
+
+/* Register Button (White) */
+.button-group .register-button,
+.button-group button:last-child {
+  background: #fff;
+  color: #007bff;
+}
+
+.button-group .register-button:hover,
+.button-group button:last-child:hover {
+  background: #007bff;
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+/* ==============================
+   News Section
+============================== */
+.news-section {
+  /* light opaque white shine gradient */
+  background: linear-gradient(90deg, #F8F9FA 0%, #ffffffec 60%);
+  color: #0b0b0b;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.news-section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* ==============================
+   Footer
+============================== */
+footer {
+  background-color: #0d6efd;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 0.9rem;
+  margin-top: auto;
+}
+
+/* ==============================
+   Responsive Design
+============================== */
+
+/* Medium screens */
+@media (max-width: 992px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+}
+
+/* Small screens (Mobile) */
+@media (max-width: 600px) {
+  .hero-section {
+    padding: 80px 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .button-group button {
+    width: 80%;
+    min-width: unset;
+    padding: 14px 0;
+    font-size: 1rem;
+  }
+}
