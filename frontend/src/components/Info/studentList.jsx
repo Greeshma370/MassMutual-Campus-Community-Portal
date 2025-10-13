@@ -5,9 +5,10 @@ import {
   FaStar,
   FaBriefcase,
   FaFileAlt,
+  FaTrashAlt,
 } from "react-icons/fa";
 import "./studentList.css";
-import { getAllStudents } from "../../services/authAPI";
+import { getAllStudents, deleteStudent } from "../../services/authAPI";
 
 export default function StudentList() {
   const dummyStudents = [
@@ -50,6 +51,17 @@ export default function StudentList() {
 
     fetchStudents();
   }, []);
+
+  // Handle student deletion
+  const handleDelete = async (id) => {
+    try {
+      await deleteStudent(id);
+      setStudents(students.filter(student => student._id !== id));
+    } catch (err) {
+      console.error("Failed to delete student", err);
+      alert("Failed to delete student.");
+    }
+  };
 
   // derive unique branch and year options from students
   const branchOptions = Array.from(new Set(students.map(s => s.department))).filter(Boolean);
@@ -97,6 +109,9 @@ export default function StudentList() {
                   <span className="student-role-badge">
                     {student.role.toUpperCase()}
                   </span>
+                  <button className="delete-button" onClick={() => handleDelete(student._id)}>
+                    <FaTrashAlt />
+                  </button>
                 </div>
                 <p>
                   {student.rollnumber}

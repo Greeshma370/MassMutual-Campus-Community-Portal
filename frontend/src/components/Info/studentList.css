@@ -251,3 +251,26 @@ button:hover,
     max-width: 100%;
   }
 }
+.delete-button {
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    margin-left: auto; /* Pushes the button to the right */
+    align-self: flex-start;
+}
+
+.student-card .student-header,
+.faculty-card .faculty-header,
+.management-card .management-header {
+    display: flex;
+    align-items: center;
+}
+
+.student-card .student-header h3,
+.faculty-card .faculty-header h3,
+.management-card .management-header h3 {
+    margin: 0;
+}

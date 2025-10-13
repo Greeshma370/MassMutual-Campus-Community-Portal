@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FaEnvelope, FaBuilding, FaUserTie, FaSearch } from "react-icons/fa";
+import { FaEnvelope, FaBuilding, FaUserTie, FaSearch, FaTrashAlt } from "react-icons/fa";
 import "./facultyList.css";
-import { getAllFaculty } from "../../services/authAPI";
+import { getAllFaculty, deleteFaculty } from "../../services/authAPI";
 
 const FacultyList = () => {
   const [faculty, setFaculty] = useState([]);
@@ -36,6 +36,16 @@ const FacultyList = () => {
       controller.abort();
     };
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteFaculty(id);
+      setFaculty(faculty.filter(member => member._id !== id));
+    } catch (err) {
+      console.error("Failed to delete faculty member", err);
+      alert("Failed to delete faculty member.");
+    }
+  };
 
   const filteredFaculty = faculty.filter(
     (member) =>
@@ -76,6 +86,9 @@ const FacultyList = () => {
                 <p><FaEnvelope /> {member.email}</p>
                 <p><FaBuilding /> {member.department}</p>
               </div>
+              <button className="delete-button" onClick={() => handleDelete(member._id)}>
+                <FaTrashAlt />
+              </button>
             </div>
           ))
         ) : (

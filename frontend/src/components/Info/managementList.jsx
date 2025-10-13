@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FaEnvelope, FaUserTie, FaSearch, FaCrown } from "react-icons/fa";
+import { FaEnvelope, FaUserTie, FaSearch, FaCrown, FaTrashAlt } from "react-icons/fa";
 import "./managementList.css";
-import { getAllManagement } from "../../services/authAPI";
+import { getAllManagement, deleteManagement } from "../../services/authAPI";
 
 const ManagementList = () => {
   const [management, setManagement] = useState([]);
@@ -30,6 +30,16 @@ const ManagementList = () => {
       controller.abort();
     };
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteManagement(id);
+      setManagement(management.filter(member => member._id !== id));
+    } catch (err) {
+      console.error("Failed to delete management member", err);
+      alert("Failed to delete management member.");
+    }
+  };
 
   const filteredManagement = management.filter(
     (member) =>
@@ -65,6 +75,9 @@ const ManagementList = () => {
                 <p><FaEnvelope /> {member.email}</p>
                 <p><FaUserTie /> Role: {member.role}</p>
               </div>
+              <button className="delete-button" onClick={() => handleDelete(member._id)}>
+                <FaTrashAlt />
+              </button>
             </div>
           ))
         ) : (
